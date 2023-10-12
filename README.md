@@ -82,6 +82,30 @@ Este controlador maneja operaciones relacionadas con empresas.
 - **URL:** `/company/{id}`
 - **Descripción:** Elimina una empresa por su ID. El ID de la empresa se debe proporcionar en la URL. Llama al método `deleteCompany` del servicio `CompanyService`.
 
+## Obtener el número de sitios asociados a una empresa
+
+Este endpoint permite obtener el número de sitios asociados a una empresa específica. El número de sitios es determinado por el servicio `companyService`, que realiza la lógica para contar los sitios asociados a la empresa.
+
+- **Método:** `GET`
+- **URL:** `/{id}/sites`
+
+### Parámetros de la Solicitud
+- `id` (UUID): El ID de la empresa de la cual deseas obtener el número de sitios asociados. Debes proporcionar este ID en la URL.
+
+### Respuesta
+El endpoint devuelve un entero que representa el número de sitios asociados a la empresa. Este número se puede utilizar para conocer cuántos sitios están vinculados a la empresa específica.
+
+Ejemplo de respuesta exitosa:
+```json
+200 OK
+5```
+En el ejemplo anterior, se devuelve el número 5, lo que indica que la empresa tiene 5 sitios asociados.
+
+En caso de error, el endpoint puede devolver un código de estado HTTP diferente, junto con un mensaje de error.
+
+Nota: Asegúrate de que el servicio companyService esté configurado adecuadamente para proporcionar la cantidad correcta de sitios asociados a la empresa.
+
+
 ## Role
 
 ### Crear Rol
