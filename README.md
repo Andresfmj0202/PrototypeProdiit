@@ -98,7 +98,8 @@ El endpoint devuelve un entero que representa el número de sitios asociados a l
 Ejemplo de respuesta exitosa:
 ```json
 200 OK
-5```
+5
+```
 En el ejemplo anterior, se devuelve el número 5, lo que indica que la empresa tiene 5 sitios asociados.
 
 En caso de error, el endpoint puede devolver un código de estado HTTP diferente, junto con un mensaje de error.
