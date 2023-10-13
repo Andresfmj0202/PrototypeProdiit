@@ -7,6 +7,7 @@ Repositorio de pruebas de API para Prodiit
 - [Role](#role)
 - [Login](#login)
 - [AddCompanyToUser](#addcompanytouser)
+- -[Site](#Site)
 
 ## Configuración
 
@@ -232,3 +233,80 @@ Este controlador maneja operaciones relacionadas con la adición de usuarios a e
 #### Respuestas
 - **Código 200 (Éxito):** Si la operación es exitosa, se devuelve un mensaje de éxito indicando que el usuario se ha agregado con éxito a la empresa. La respuesta es del tipo `ResponseEntity<String>`.
 - **Código 500 (Error Interno del Servidor):** Si ocurre un error durante la operación, se devuelve un mensaje de error que describe el problema. El código de estado HTTP se establece en 500 (Error Interno del Servidor). La respuesta es del tipo `ResponseEntity<String>`.
+
+## Site
+
+El `SiteController` es responsable de gestionar los sitios y proporciona varios endpoints para crear, obtener, actualizar y eliminar sitios.
+
+## Crear y Guardar un Sitio
+
+### Método: POST
+#### URL: /site
+Este endpoint permite crear y guardar un nuevo sitio. Debes proporcionar los datos del sitio en formato JSON en el cuerpo de la solicitud. La solicitud se encargará de crear un sitio y asignarlo a una compañía existente en función del ID de compañía proporcionado en el DTO.
+
+#### Ejemplo de Solicitud:
+```json
+{
+    "name": "Nombre del Sitio",
+    "description": "Descripción del Sitio",
+    "companyId": "ID de la Compañía"
+}
+```
+
+# Documentación de Endpoints - SiteController
+
+## Crear y Guardar un Sitio
+
+**Método:** POST
+**URL:** /site
+
+Este endpoint permite crear y guardar un nuevo sitio. Debes proporcionar los datos del sitio en formato JSON en el cuerpo de la solicitud.
+
+**Respuesta Exitosa:**
+El sitio se crea con éxito y se devuelve un DTO con los detalles del sitio, incluido su ID.
+
+**Respuesta de Error:**
+Si la compañía con el ID proporcionado no existe, se devuelve una respuesta nula.
+
+## Obtener Todos los Sitios
+
+**Método:** GET
+**URL:** /site/all
+
+Este endpoint devuelve una lista de todos los sitios registrados en el sistema en formato DTO.
+
+## Obtener Sitio por Nombre
+
+**Método:** GET
+**URL:** /site/name/{name}
+
+Este endpoint devuelve una lista de sitios que coinciden con el nombre proporcionado en la URL.
+
+## Obtener Sitio por ID
+
+**Método:** GET
+**URL:** /site/{id}
+
+Este endpoint permite obtener un sitio específico por su ID. El ID del sitio se debe proporcionar en la URL.
+
+**Respuesta Exitosa:**
+El sitio se encuentra y se devuelve un DTO con sus detalles.
+
+**Respuesta de Error:**
+Si el sitio con el ID proporcionado no existe, se devuelve una respuesta nula.
+
+## Actualizar Sitio
+
+**Método:** PUT
+**URL:** /site/{id}
+
+Este endpoint permite actualizar los datos de un sitio existente. Debes proporcionar el ID del sitio en la URL y los nuevos datos del sitio en el cuerpo de la solicitud en formato JSON.
+
+## Borrar Sitio
+
+**Método:** DELETE
+**URL:** /site/{id}
+
+Este endpoint permite eliminar un sitio por su ID. El ID del sitio se debe proporcionar en la URL.
+
+
