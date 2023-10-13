@@ -9,7 +9,50 @@ Repositorio de pruebas de API para Prodiit
 - [AddCompanyToUser](#addcompanytouser)
 
 ## Configuración
-Descripción de la configuración de tu proyecto.
+# Configuración de Proyecto Spring Boot con MySQL
+
+En esta documentación, se describe la configuración básica de un proyecto Spring Boot que utiliza Maven 3.1.4 y JDK 17, junto con una base de datos MySQL. Asegúrate de tener estas herramientas y tecnologías instaladas antes de comenzar.
+
+##Instalacion Jdk
+
+Ver video de instalación y configuración del JDK
+
+## Configuración de la Base de Datos
+
+Para configurar la conexión a la base de datos MySQL, debes proporcionar las siguientes propiedades en el archivo `application.properties` de tu proyecto:
+
+```properties
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/ProdiitAPP
+spring.datasource.username=root
+spring.datasource.password=12345
+```
+
+spring.datasource.driver-class-name: Define la clase del controlador JDBC de MySQL.
+spring.datasource.url: Especifica la URL de conexión a tu base de datos MySQL. Asegúrate de cambiar localhost:3306/ProdiitAPP por la URL correcta de tu base de datos.
+spring.datasource.username: Define el nombre de usuario de la base de datos.
+spring.datasource.password: Establece la contraseña de la base de datos.
+Configuración de JPA
+JPA (Java Persistence API) es una especificación de Java que permite el mapeo objeto-relacional (ORM). Para configurar JPA, debes proporcionar las siguientes propiedades en el mismo archivo application.properties:
+
+```properties
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+```
+
+spring.jpa.database-platform: Define el dialecto de MySQL que se utilizará para generar las consultas SQL. En este caso, se utiliza org.hibernate.dialect.MySQLDialect.
+spring.jpa.hibernate.ddl-auto: Controla la generación de tablas en la base de datos. En este ejemplo, se establece en update, lo que significa que Hibernate actualizará automáticamente la estructura de la base de datos si es necesario. Otras opciones comunes son create y validate.
+Ejecución del Proyecto
+Una vez que hayas configurado tu proyecto Spring Boot, puedes ejecutarlo utilizando Maven y Spring Boot CLI. Utiliza los siguientes comandos:
+
+```bash
+mvn spring-boot:run
+```
+Este comando compilará y ejecutará tu proyecto Spring Boot. Asegúrate de que todos los componentes estén correctamente configurados para que tu aplicación se conecte a la base de datos MySQL.
+
+¡Tu proyecto Spring Boot está listo para funcionar con MySQL! Asegúrate de que tu base de datos esté activa y accesible antes de ejecutar la aplicación.
+
+Si deseas obtener más información sobre la configuración avanzada o la estructura del proyecto Spring Boot, consulta la documentación oficial de Spring Boot en spring.io.
 
 ## User
 
