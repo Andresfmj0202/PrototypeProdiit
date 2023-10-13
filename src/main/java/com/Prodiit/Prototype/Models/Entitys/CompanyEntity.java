@@ -1,10 +1,9 @@
 package com.Prodiit.Prototype.Models.Entitys;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table (name = "company")
@@ -22,15 +21,25 @@ public class CompanyEntity {
     @ManyToMany(mappedBy = "companies")
     private Set<UserEntity> users = new HashSet<>();
 
+    // Relación de la compañía con sitios
+    @JsonManagedReference
+    @OneToMany(mappedBy = "company")
+    private List<SiteEntity> sites;
+
+
+    public int getSiteCount() {
+        return sites.size(); // Método para obtener el número de sitios asociados
+    }
     public CompanyEntity() {
     }
 
-    public CompanyEntity(UUID CompanyId, String name, String description, String imageLogo, Set<UserEntity> users) {
+    public CompanyEntity(UUID CompanyId, String name, String description, String imageLogo, Set<UserEntity> users, List<SiteEntity> sites) {
         this.CompanyId = CompanyId;
         this.name = name;
         this.description = description;
         this.imageLogo = imageLogo;
         this.users = users;
+        this.sites = sites;
     }
 
     public UUID getCompanyId() {
@@ -71,5 +80,13 @@ public class CompanyEntity {
 
     public void setUsers(Set<UserEntity> users) {
         this.users = users;
+    }
+
+    public List<SiteEntity> getSites() {
+        return sites;
+    }
+
+    public void setSites(List<SiteEntity> sites) {
+        this.sites = sites;
     }
 }

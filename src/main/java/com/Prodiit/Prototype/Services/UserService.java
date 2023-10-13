@@ -1,5 +1,6 @@
 package com.Prodiit.Prototype.Services;
 
+import com.Prodiit.Prototype.Models.Dtos.UserDTO;
 import com.Prodiit.Prototype.Models.Entitys.UserEntity;
 import com.Prodiit.Prototype.Respositorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -30,6 +28,8 @@ public class UserService {
         // Generar un ID único y asignarlo a la entidad
         userEntity.setUserId(UUID.randomUUID());
 
+
+        // Encriptar la contraseña
         try {
             // Generar una sal aleatoria
             SecureRandom random = new SecureRandom();
@@ -72,11 +72,31 @@ public class UserService {
         return userRepository.save(userEntity);
     }
 
-    public List<UserEntity> getAllUsers(){
+    // Obtener todos los usuarios
+    public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<UserEntity> getUserById(UUID id){
+    public List<UserDTO> mapToDTOList(List<UserEntity> userEntities) {
+        List<UserDTO> userDTOs = new ArrayList<>();
+        for (UserEntity userEntity : userEntities) {
+            userDTOs.add(mapToDTO(userEntity));
+        }
+        return userDTOs;
+    }
+
+
+    public UserDTO mapToDTO(UserEntity userEntity) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(userEntity.getUserId());
+        userDTO.setName(userEntity.getName());
+        userDTO.setEmail(userEntity.getEmail());
+        userDTO.setImage(userEntity.getImage());
+
+        return userDTO;
+    }
+
+    public Optional<UserEntity> findUserById(UUID id) {
         return userRepository.findById(id);
     }
 

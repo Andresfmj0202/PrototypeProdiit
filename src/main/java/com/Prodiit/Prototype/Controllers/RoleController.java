@@ -1,8 +1,7 @@
 package com.Prodiit.Prototype.Controllers;
 
+import com.Prodiit.Prototype.Models.Dtos.UserRoleAssignmentDTO;
 import com.Prodiit.Prototype.Models.Entitys.RoleEntity;
-import com.Prodiit.Prototype.Models.Entitys.UserEntity;
-import com.Prodiit.Prototype.Respositorys.UserRepository;
 import com.Prodiit.Prototype.Services.RoleService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +18,14 @@ import java.util.UUID;
 public class RoleController {
 
 
-    @Autowired
-    private UserRepository userRepository;
+
+    private final RoleService roleService;
 
     @Autowired
-    private RoleService roleService;
+    public RoleController( RoleService roleService) {
 
-    @Autowired
-    public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
-
     //Crear Role
     @PostMapping
     public Object save(@RequestBody RoleEntity roleEntity) {
@@ -65,18 +61,15 @@ public class RoleController {
     @PutMapping("/user/{userId}/role/{roleId}")
     public ResponseEntity<RoleEntity> asignarRolAUsuario(@PathVariable UUID userId, @PathVariable Long roleId) {
         try {
-            Optional<UserEntity> userEntityOptional = userRepository.findById(userId);
+            // Crea un DTO para representar la asignación de roles
+            UserRoleAssignmentDTO assignmentDTO = new UserRoleAssignmentDTO();
+            assignmentDTO.setUserId(userId);
+            assignmentDTO.setRoleId(roleId);
 
-            if (userEntityOptional.isPresent()) {
-                UserEntity userEntity = userEntityOptional.get();
-                RoleEntity role = roleService.findById(roleId)
-                        .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado"));
+            // Llama a un servicio para procesar la asignación
+            RoleEntity assignedRole = roleService.asignarRolAUsuario(assignmentDTO);
 
-                RoleEntity assignedRole = roleService.asignarRolAUsuario(role, userEntity);
-                return ResponseEntity.ok(assignedRole);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return ResponseEntity.ok(assignedRole);
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.notFound().build();
         } catch (Exception ex) {

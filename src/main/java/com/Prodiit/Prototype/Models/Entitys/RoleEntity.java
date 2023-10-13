@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table (name = "rol")
 public class RoleEntity {
@@ -16,18 +18,19 @@ public class RoleEntity {
     private String name;
     private String description;
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "role") // Un rol puede estar asociado a varios usuarios (relación uno a muchos)
+    private List<UserEntity> users; // Colección de usuarios asociados a este rol
 
-    @JsonIgnoreProperties("role") // Ignora la propiedad "role" en la entidad UserEntity
-    @OneToOne(mappedBy = "role", cascade = CascadeType.ALL)
-    private UserEntity user;
 
 
     public RoleEntity() {
     }
 
-    public RoleEntity(String name, String description) {
+    public RoleEntity(String name, String description, List<UserEntity> users) {
         this.name = name;
         this.description = description;
+        this.users = users;
     }
 
     public long getRoleId() {
@@ -54,4 +57,11 @@ public class RoleEntity {
         this.description = description;
     }
 
+    public List<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<UserEntity> users) {
+        this.users = users;
+    }
 }

@@ -1,6 +1,5 @@
 package com.Prodiit.Prototype.Models.Entitys;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
@@ -29,7 +28,8 @@ public class UserEntity {
     )
     private Set<CompanyEntity> companies = new HashSet<>();
 
-    @OneToOne
+    @JsonManagedReference
+    @ManyToOne // Muchos usuarios pueden tener el mismo rol (relación muchos a uno)
     @JoinColumn(name = "role_id")
     private RoleEntity role;
     public UserEntity() {

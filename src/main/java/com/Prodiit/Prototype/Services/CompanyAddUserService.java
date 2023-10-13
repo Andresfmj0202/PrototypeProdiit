@@ -23,7 +23,7 @@ public class CompanyAddUserService {
     //agregar un usuario a una compañía
     public void addUserToCompany(UUID userId, UUID companyId) {
         // Obtener el usuario por su ID
-        Optional<UserEntity> userOptional = userService.getUserById(userId);
+        Optional<UserEntity> userOptional = userService.findUserById(userId);
 
         if (userOptional.isPresent()) {
             UserEntity user = userOptional.get();
