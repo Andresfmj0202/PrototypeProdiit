@@ -9,13 +9,17 @@ Repositorio de pruebas de API para Prodiit
 - [AddCompanyToUser](#addcompanytouser)
 
 ## Configuración
+
+
 # Configuración de Proyecto Spring Boot con MySQL
 
 En esta documentación, se describe la configuración básica de un proyecto Spring Boot que utiliza Maven 3.1.4 y JDK 17, junto con una base de datos MySQL. Asegúrate de tener estas herramientas y tecnologías instaladas antes de comenzar.
 
-##Instalacion Jdk
+# Instalacion Jdk
 
-Ver video de instalación y configuración del JDK
+
+[Ver video de instalación y configuración del JDK](https://www.youtube.com/watch?v=BG2OSaxWX4E)
+
 
 ## Configuración de la Base de Datos
 
@@ -29,20 +33,36 @@ spring.datasource.password=12345
 ```
 
 spring.datasource.driver-class-name: Define la clase del controlador JDBC de MySQL.
+
+
 spring.datasource.url: Especifica la URL de conexión a tu base de datos MySQL. Asegúrate de cambiar localhost:3306/ProdiitAPP por la URL correcta de tu base de datos.
+
+
 spring.datasource.username: Define el nombre de usuario de la base de datos.
+
+
 spring.datasource.password: Establece la contraseña de la base de datos.
+
+
 Configuración de JPA
-JPA (Java Persistence API) es una especificación de Java que permite el mapeo objeto-relacional (ORM). Para configurar JPA, debes proporcionar las siguientes propiedades en el mismo archivo application.properties:
+JPA (Java Persistence API) es una especificación de Java que permite el mapeo objeto-relacional (ORM).
+
+Para configurar JPA, debes proporcionar las siguientes propiedades en el mismo archivo application.properties:
 
 ```properties
 spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 spring.jpa.hibernate.ddl-auto=update
 ```
 
-spring.jpa.database-platform: Define el dialecto de MySQL que se utilizará para generar las consultas SQL. En este caso, se utiliza org.hibernate.dialect.MySQLDialect.
+spring.jpa.database-platform: Define el dialecto de MySQL que se utilizará para generar las consultas SQL.
+
+En este caso, se utiliza org.hibernate.dialect.MySQLDialect.
+
+
 spring.jpa.hibernate.ddl-auto: Controla la generación de tablas en la base de datos. En este ejemplo, se establece en update, lo que significa que Hibernate actualizará automáticamente la estructura de la base de datos si es necesario. Otras opciones comunes son create y validate.
-Ejecución del Proyecto
+
+
+# Ejecución del Proyecto
 Una vez que hayas configurado tu proyecto Spring Boot, puedes ejecutarlo utilizando Maven y Spring Boot CLI. Utiliza los siguientes comandos:
 
 ```bash
