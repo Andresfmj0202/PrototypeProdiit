@@ -1,13 +1,17 @@
 package com.Prodiit.Prototype.Services;
 
+import com.Prodiit.Prototype.Models.Dtos.RoleDTO;
+import com.Prodiit.Prototype.Models.Dtos.UserDTO;
 import com.Prodiit.Prototype.Models.Dtos.UserRoleAssignmentDTO;
 import com.Prodiit.Prototype.Models.Entitys.RoleEntity;
 import com.Prodiit.Prototype.Models.Entitys.UserEntity;
 import com.Prodiit.Prototype.Respositorys.RoleRepository;
+import com.Prodiit.Prototype.Respositorys.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,13 +22,15 @@ public class RoleService {
     @Autowired
     private  final RoleRepository roleRepository;
     private  final UserService userService;
+    private  final UserRepository userRepository;
 
 
 
 
-    public RoleService(RoleRepository roleRepository, UserService userService) {
+    public RoleService(RoleRepository roleRepository, UserService userService, UserRepository userRepository) {
         this.roleRepository = roleRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
 
     }
 
@@ -56,26 +62,37 @@ public class RoleService {
         roleRepository.deleteById(id);
     }
 
-    //asignar un rol a un usuario
-    public RoleEntity asignarRolAUsuario(UserRoleAssignmentDTO assignmentDTO) {
-        UUID userId = assignmentDTO.getUserId();
-        Long roleId = assignmentDTO.getRoleId();
-
-        // Recupera el usuario y el rol de sus respectivos servicios o repositorios
-        UserEntity userEntity = userService.findUserById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
-        RoleEntity role = roleRepository.findById(roleId)
+    public RoleDTO assignUserToRole(UserRoleAssignmentDTO assignmentDTO) {
+        // Recupera el rol desde la base de datos
+        RoleEntity roleEntity = roleRepository.findById(assignmentDTO.getRoleId())
                 .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado"));
 
+        // Llama al servicio de usuarios para obtener el usuario
+        UserEntity userEntity = userRepository.findById(assignmentDTO.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
         // Asigna el rol al usuario
-        userEntity.setRole(role);
+        userEntity.setRole(roleEntity);
 
-        // Guarda los cambios en el usuario
-        userService.createAndSaveUser(userEntity);
+        // Realiza la actualización del usuario en el servicio de usuarios
+        userRepository.save(userEntity);
 
-        return role;
+        // Convierte el usuario actualizado en UserDTO
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(userEntity.getUserId());
+        userDTO.setName(userEntity.getName());
+        userDTO.setEmail(userEntity.getEmail());
+        userDTO.setImage(userEntity.getImage());
+        userDTO.setRoleId(userEntity.getRole().getRoleId());
+
+        // Crea y devuelve un RoleDTO
+        RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setRoleId(roleEntity.getRoleId());
+        roleDTO.setName(roleEntity.getName());
+        roleDTO.setDescription(roleEntity.getDescription());
+        roleDTO.setUsers(Collections.singletonList(userDTO));
+
+        return roleDTO;
     }
-
-    //permiso de Administrador para agregar un invitado
 
 }

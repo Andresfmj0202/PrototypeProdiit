@@ -109,6 +109,4 @@ public class SiteController {
         siteService.deleteSite(siteId);
     }
 
-
-
 }

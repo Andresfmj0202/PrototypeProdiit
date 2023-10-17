@@ -1,8 +1,10 @@
 package com.Prodiit.Prototype.Services;
 
 import com.Prodiit.Prototype.Models.Dtos.UserDTO;
+import com.Prodiit.Prototype.Models.Entitys.RoleEntity;
 import com.Prodiit.Prototype.Models.Entitys.UserEntity;
 import com.Prodiit.Prototype.Respositorys.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,56 +24,56 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public UserDTO createAndSaveUser(UserDTO userDTO) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setName(userDTO.getName());
+        userEntity.setEmail(userDTO.getEmail());
+        userEntity.setImage(userDTO.getImage());
 
+        // Obtener o asignar el objeto RoleEntity (dependiendo de tu lógica)
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setRoleId(userDTO.getRoleId());
+        userEntity.setRole(roleEntity);
 
-    public UserEntity createAndSaveUser(UserEntity userEntity) {
         // Generar un ID único y asignarlo a la entidad
         userEntity.setUserId(UUID.randomUUID());
 
+        String password = userDTO.getPassword(); // Asegúrate de que getPassword() obtenga la contraseña
 
-        // Encriptar la contraseña
-        try {
-            // Generar una sal aleatoria
-            SecureRandom random = new SecureRandom();
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
+        if (password != null) {
+            try {
+                SecureRandom random = new SecureRandom();
+                byte[] salt = new byte[16];
+                random.nextBytes(salt);
+                userEntity.setSalt(Base64.getEncoder().encodeToString(salt));
 
-            // Asignar la sal directamente a la entidad
-            userEntity.setSalt(Base64.getEncoder().encodeToString(salt));
-
-            // Luego, sigue con el cálculo y asignación del hash de la contraseña
-
-            // Crear una instancia de MessageDigest con el algoritmo de hash deseado (por ejemplo, SHA-256)
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-
-            // Obtener los bytes de la contraseña
-            byte[] passwordBytes = userEntity.getPassword().getBytes(StandardCharsets.UTF_8);
-
-            // Combinar la sal y la contraseña
-            byte[] saltedPassword = new byte[salt.length + passwordBytes.length];
-            System.arraycopy(salt, 0, saltedPassword, 0, salt.length);
-            System.arraycopy(passwordBytes, 0, saltedPassword, salt.length, passwordBytes.length);
-
-            // Calcular el hash de la contraseña con la sal
-            byte[] hashBytes = md.digest(saltedPassword);
-
-            // Convertir el hash a una representación en base64
-            String hashedPassword = Base64.getEncoder().encodeToString(hashBytes);
-
-            // Asignar el hash a la entidad
-            userEntity.setPassword(hashedPassword);
-
-            // Imprimir el hash y la sal (esto es opcional)
-            System.out.println("Contraseña encriptada: " + hashedPassword);
-            System.out.println("Sal utilizada: " + userEntity.getSalt());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
+                byte[] saltedPassword = new byte[salt.length + passwordBytes.length];
+                System.arraycopy(salt, 0, saltedPassword, 0, salt.length);
+                System.arraycopy(passwordBytes, 0, saltedPassword, salt.length, passwordBytes.length);
+                byte[] hashBytes = md.digest(saltedPassword);
+                String hashedPassword = Base64.getEncoder().encodeToString(hashBytes);
+                userEntity.setPassword(hashedPassword);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Manejar el caso en el que la contraseña es nula
+            // Puedes lanzar una excepción, establecer una contraseña por defecto, etc.
         }
 
-        // Guardar la entidad en la base de datos
-        return userRepository.save(userEntity);
-    }
+        UserEntity createdUserEntity = userRepository.save(userEntity);
 
+        UserDTO createdUserDTO = new UserDTO();
+        createdUserDTO.setUserId(createdUserEntity.getUserId());
+        createdUserDTO.setName(createdUserEntity.getName());
+        createdUserDTO.setEmail(createdUserEntity.getEmail());
+        createdUserDTO.setImage(createdUserEntity.getImage());
+        createdUserDTO.setRoleId(createdUserEntity.getRole().getRoleId());
+
+        return createdUserDTO;
+    }
     // Obtener todos los usuarios
     public List<UserEntity> getAllUsers() {
         return userRepository.findAll();
@@ -86,11 +88,32 @@ public class UserService {
     }
 
 
+    public List<UserDTO> mapUserEntitiesToDTOs(List<UserEntity> userEntities) {
+        List<UserDTO> userDTOs = new ArrayList<>();
+        for (UserEntity userEntity : userEntities) {
+            userDTOs.add(mapUserEntityToDTO(userEntity));
+        }
+        return userDTOs;
+    }
+    public UserDTO mapUserEntityToDTO(UserEntity userEntity) {
+        return new UserDTO(
+                userEntity.getUserId(),
+                userEntity.getName(),
+                userEntity.getEmail(),
+                userEntity.getImage(),
+                userEntity.getRole().getRoleId(),
+                userEntity.getPassword()
+                // Ajusta esto según tu modelo de datos
+        );
+    }
+
     public UserDTO mapToDTO(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(userEntity.getUserId());
         userDTO.setName(userEntity.getName());
         userDTO.setEmail(userEntity.getEmail());
+        userDTO.setRoleId(userEntity.getRole().getRoleId());
+        userDTO.setPassword(userEntity.getPassword());
         userDTO.setImage(userEntity.getImage());
 
         return userDTO;
@@ -107,11 +130,35 @@ public class UserService {
     public List<UserEntity> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-    public UserEntity updateUser(UUID id, UserEntity user){
+    public UserEntity updateUserCompany(UUID id, UserEntity user){
         user.setUserId(id);
         return userRepository.save(user);
     }
+    public UserDTO updateUser(UUID userId, UserDTO updatedUserDTO) {
+        // Recupera el usuario existente de la base de datos
+        UserEntity existingUserEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
+        // Actualiza los campos del usuario con la información de UserDTO
+        existingUserEntity.setName(updatedUserDTO.getName());
+        existingUserEntity.setEmail(updatedUserDTO.getEmail());
+        existingUserEntity.setImage(updatedUserDTO.getImage());
+
+        // Actualiza cualquier otro campo necesario
+
+        // Guarda el usuario actualizado en la base de datos
+        UserEntity updatedUserEntity = userRepository.save(existingUserEntity);
+
+        // Convierte el usuario actualizado en UserDTO y devuélvelo
+        UserDTO updatedUserResultDTO = new UserDTO();
+        updatedUserResultDTO.setUserId(updatedUserEntity.getUserId());
+        updatedUserResultDTO.setName(updatedUserEntity.getName());
+        updatedUserResultDTO.setEmail(updatedUserEntity.getEmail());
+        updatedUserResultDTO.setImage(updatedUserEntity.getImage());
+        updatedUserResultDTO.setRoleId(updatedUserEntity.getRole().getRoleId());
+
+        return updatedUserResultDTO;
+    }
     public void deleteUser(UUID id){
         userRepository.deleteById(id);
     }

@@ -1,9 +1,14 @@
 package com.Prodiit.Prototype.Controllers;
 
+import com.Prodiit.Prototype.Models.Dtos.RoleDTO;
 import com.Prodiit.Prototype.Models.Dtos.UserDTO;
+import com.Prodiit.Prototype.Models.Dtos.UserRoleAssignmentDTO;
+import com.Prodiit.Prototype.Models.Entitys.RoleEntity;
 import com.Prodiit.Prototype.Models.Entitys.UserEntity;
 import com.Prodiit.Prototype.Services.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,10 +31,11 @@ public class UserController {
 
     //crear usuario
     @PostMapping
-    public Object createUser(@RequestBody UserEntity userEntity) {
-
-        return userService.createAndSaveUser(userEntity);
+    public UserDTO createUser(@RequestBody UserDTO userDTO) {
+        // Llama al servicio para crear y guardar el usuario y devuelve el resultado
+        return userService.createAndSaveUser(userDTO);
     }
+
 
     //obtener todos los usuarios
     @GetMapping
@@ -56,42 +62,33 @@ public class UserController {
     @GetMapping("/name/{name}")
     public List<UserDTO> getUserByUsername(@PathVariable String name) {
         List<UserEntity> users = userService.findByname(name);
-        return mapUserEntitiesToDTOs(users);
+        return userService.mapUserEntitiesToDTOs(users);
     }
-
-    private List<UserDTO> mapUserEntitiesToDTOs(List<UserEntity> userEntities) {
-        List<UserDTO> userDTOs = new ArrayList<>();
-        for (UserEntity userEntity : userEntities) {
-            userDTOs.add(mapUserEntityToDTO(userEntity));
-        }
-        return userDTOs;
-    }
-    private UserDTO mapUserEntityToDTO(UserEntity userEntity) {
-        return new UserDTO(
-                userEntity.getUserId(),
-                userEntity.getName(),
-                userEntity.getEmail(),
-                userEntity.getImage(),
-                userEntity.getRole().getRoleId()
-                // Ajusta esto según tu modelo de datos
-        );
-    }
-
 
 
     //obtener usuario por email
     @GetMapping("/email/{email}")
     public List<UserDTO> getUserByEmail(@PathVariable String email) {
         List<UserEntity> users = userService.findByEmail(email);
-        return mapUserEntitiesToDTOs(users);
+        return userService.mapUserEntitiesToDTOs(users);
     }
      //actualizar usuario
-     @PutMapping("/{id}")
-    public UserEntity updateUser(@PathVariable UUID id, @RequestBody UserEntity user){
+     @PutMapping("addCompany/{id}")
+    public UserEntity updateUserCompany(@PathVariable UUID id, @RequestBody UserEntity user){
         user.setUserId(id);
-        return userService.updateUser(id,user);
+        return userService.updateUserCompany(id,user);
     }
-
+    @PutMapping("/{userId}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable UUID userId, @RequestBody UserDTO updatedUserDTO) {
+        try {
+            UserDTO updatedUser = userService.updateUser(userId, updatedUserDTO);
+            return ResponseEntity.ok(updatedUser);
+        } catch (EntityNotFoundException ex) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
     //borrar usuario
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable UUID id){

@@ -1,5 +1,6 @@
 package com.Prodiit.Prototype.Controllers;
 
+import com.Prodiit.Prototype.Models.Dtos.RoleDTO;
 import com.Prodiit.Prototype.Models.Dtos.UserRoleAssignmentDTO;
 import com.Prodiit.Prototype.Models.Entitys.RoleEntity;
 import com.Prodiit.Prototype.Services.RoleService;
@@ -58,18 +59,13 @@ public class RoleController {
     }
 
     //Asignar un rol a un usuario
-    @PutMapping("/user/{userId}/role/{roleId}")
-    public ResponseEntity<RoleEntity> asignarRolAUsuario(@PathVariable UUID userId, @PathVariable Long roleId) {
+    @PutMapping("/role")
+    public ResponseEntity<RoleDTO> assignUserRole(@RequestBody UserRoleAssignmentDTO assignmentDTO) {
         try {
-            // Crea un DTO para representar la asignación de roles
-            UserRoleAssignmentDTO assignmentDTO = new UserRoleAssignmentDTO();
-            assignmentDTO.setUserId(userId);
-            assignmentDTO.setRoleId(roleId);
+            // Llama al servicio para procesar la asignación
+            RoleDTO assignedRoleDTO = roleService.assignUserToRole(assignmentDTO);
 
-            // Llama a un servicio para procesar la asignación
-            RoleEntity assignedRole = roleService.asignarRolAUsuario(assignmentDTO);
-
-            return ResponseEntity.ok(assignedRole);
+            return ResponseEntity.ok(assignedRoleDTO);
         } catch (EntityNotFoundException ex) {
             return ResponseEntity.notFound().build();
         } catch (Exception ex) {

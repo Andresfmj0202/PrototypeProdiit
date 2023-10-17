@@ -10,18 +10,21 @@ public class UserDTO {
     private long roleId; // Representa el ID de la entidad RoleEntity
     // Otros campos según tus necesidades
 
+    private String password;
+
     // Constructores, getters y setters
 
     public UserDTO() {
         // Constructor vacío
     }
 
-    public UserDTO(UUID userId, String name, String email, String image, long roleId) {
+    public UserDTO(UUID userId, String name, String email, String image, long roleId, String password) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.image = image;
         this.roleId = roleId;
+        this.password = password;
     }
 
     // Getters y setters para los campos
@@ -64,5 +67,13 @@ public class UserDTO {
 
     public void setRoleId(long roleId) {
         this.roleId = roleId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

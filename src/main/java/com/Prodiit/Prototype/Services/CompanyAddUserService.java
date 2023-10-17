@@ -1,11 +1,16 @@
 package com.Prodiit.Prototype.Services;
 
+import com.Prodiit.Prototype.Models.Dtos.CompanyDTO;
+import com.Prodiit.Prototype.Models.Dtos.UserCompanyRelationshipDTO;
+import com.Prodiit.Prototype.Models.Dtos.UserDTO;
 import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
 import com.Prodiit.Prototype.Models.Entitys.UserEntity;
 import com.Prodiit.Prototype.Respositorys.CompanyAddUserRepository;
+import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 @Service
@@ -38,13 +43,10 @@ public class CompanyAddUserService {
                 user.getCompanies().add(company);
 
                 // Guardar el usuario actualizado en la base de datos
-                userService.updateUser(userId, user);
+                userService.updateUserCompany(userId, user);
             }
         }
     }
-
-    //agregar un compañía a un usuario
-
 
 }
 
