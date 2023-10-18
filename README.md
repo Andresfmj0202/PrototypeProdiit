@@ -7,9 +7,73 @@ Repositorio de pruebas de API para Prodiit
 - [Role](#role)
 - [Login](#login)
 - [AddCompanyToUser](#addcompanytouser)
+- -[Site](#Site)
 
 ## Configuración
-Descripción de la configuración de tu proyecto.
+
+
+# Configuración de Proyecto Spring Boot con MySQL
+
+En esta documentación, se describe la configuración básica de un proyecto Spring Boot que utiliza Maven 3.1.4 y JDK 17, junto con una base de datos MySQL. Asegúrate de tener estas herramientas y tecnologías instaladas antes de comenzar.
+
+# Instalacion Jdk
+
+
+[Ver video de instalación y configuración del JDK](https://www.youtube.com/watch?v=BG2OSaxWX4E)
+
+
+## Configuración de la Base de Datos
+
+Para configurar la conexión a la base de datos MySQL, debes proporcionar las siguientes propiedades en el archivo `application.properties` de tu proyecto:
+
+```properties
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/ProdiitAPP
+spring.datasource.username=root
+spring.datasource.password=12345
+```
+
+spring.datasource.driver-class-name: Define la clase del controlador JDBC de MySQL.
+
+
+spring.datasource.url: Especifica la URL de conexión a tu base de datos MySQL. Asegúrate de cambiar localhost:3306/ProdiitAPP por la URL correcta de tu base de datos.
+
+
+spring.datasource.username: Define el nombre de usuario de la base de datos.
+
+
+spring.datasource.password: Establece la contraseña de la base de datos.
+
+
+Configuración de JPA
+JPA (Java Persistence API) es una especificación de Java que permite el mapeo objeto-relacional (ORM).
+
+Para configurar JPA, debes proporcionar las siguientes propiedades en el mismo archivo application.properties:
+
+```properties
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+spring.jpa.hibernate.ddl-auto=update
+```
+
+spring.jpa.database-platform: Define el dialecto de MySQL que se utilizará para generar las consultas SQL.
+
+En este caso, se utiliza org.hibernate.dialect.MySQLDialect.
+
+
+spring.jpa.hibernate.ddl-auto: Controla la generación de tablas en la base de datos. En este ejemplo, se establece en update, lo que significa que Hibernate actualizará automáticamente la estructura de la base de datos si es necesario. Otras opciones comunes son create y validate.
+
+
+# Ejecución del Proyecto
+Una vez que hayas configurado tu proyecto Spring Boot, puedes ejecutarlo utilizando Maven y Spring Boot CLI. Utiliza los siguientes comandos:
+
+```bash
+mvn spring-boot:run
+```
+Este comando compilará y ejecutará tu proyecto Spring Boot. Asegúrate de que todos los componentes estén correctamente configurados para que tu aplicación se conecte a la base de datos MySQL.
+
+¡Tu proyecto Spring Boot está listo para funcionar con MySQL! Asegúrate de que tu base de datos esté activa y accesible antes de ejecutar la aplicación.
+
+Si deseas obtener más información sobre la configuración avanzada o la estructura del proyecto Spring Boot, consulta la documentación oficial de Spring Boot en spring.io.
 
 ## User
 
@@ -169,3 +233,80 @@ Este controlador maneja operaciones relacionadas con la adición de usuarios a e
 #### Respuestas
 - **Código 200 (Éxito):** Si la operación es exitosa, se devuelve un mensaje de éxito indicando que el usuario se ha agregado con éxito a la empresa. La respuesta es del tipo `ResponseEntity<String>`.
 - **Código 500 (Error Interno del Servidor):** Si ocurre un error durante la operación, se devuelve un mensaje de error que describe el problema. El código de estado HTTP se establece en 500 (Error Interno del Servidor). La respuesta es del tipo `ResponseEntity<String>`.
+
+## Site
+
+El `SiteController` es responsable de gestionar los sitios y proporciona varios endpoints para crear, obtener, actualizar y eliminar sitios.
+
+## Crear y Guardar un Sitio
+
+### Método: POST
+#### URL: /site
+Este endpoint permite crear y guardar un nuevo sitio. Debes proporcionar los datos del sitio en formato JSON en el cuerpo de la solicitud. La solicitud se encargará de crear un sitio y asignarlo a una compañía existente en función del ID de compañía proporcionado en el DTO.
+
+#### Ejemplo de Solicitud:
+```json
+{
+    "name": "Nombre del Sitio",
+    "description": "Descripción del Sitio",
+    "companyId": "ID de la Compañía"
+}
+```
+
+# Documentación de Endpoints - SiteController
+
+## Crear y Guardar un Sitio
+
+**Método:** POST
+**URL:** /site
+
+Este endpoint permite crear y guardar un nuevo sitio. Debes proporcionar los datos del sitio en formato JSON en el cuerpo de la solicitud.
+
+**Respuesta Exitosa:**
+El sitio se crea con éxito y se devuelve un DTO con los detalles del sitio, incluido su ID.
+
+**Respuesta de Error:**
+Si la compañía con el ID proporcionado no existe, se devuelve una respuesta nula.
+
+## Obtener Todos los Sitios
+
+**Método:** GET
+**URL:** /site/all
+
+Este endpoint devuelve una lista de todos los sitios registrados en el sistema en formato DTO.
+
+## Obtener Sitio por Nombre
+
+**Método:** GET
+**URL:** /site/name/{name}
+
+Este endpoint devuelve una lista de sitios que coinciden con el nombre proporcionado en la URL.
+
+## Obtener Sitio por ID
+
+**Método:** GET
+**URL:** /site/{id}
+
+Este endpoint permite obtener un sitio específico por su ID. El ID del sitio se debe proporcionar en la URL.
+
+**Respuesta Exitosa:**
+El sitio se encuentra y se devuelve un DTO con sus detalles.
+
+**Respuesta de Error:**
+Si el sitio con el ID proporcionado no existe, se devuelve una respuesta nula.
+
+## Actualizar Sitio
+
+**Método:** PUT
+**URL:** /site/{id}
+
+Este endpoint permite actualizar los datos de un sitio existente. Debes proporcionar el ID del sitio en la URL y los nuevos datos del sitio en el cuerpo de la solicitud en formato JSON.
+
+## Borrar Sitio
+
+**Método:** DELETE
+**URL:** /site/{id}
+
+Este endpoint permite eliminar un sitio por su ID. El ID del sitio se debe proporcionar en la URL.
+
+
