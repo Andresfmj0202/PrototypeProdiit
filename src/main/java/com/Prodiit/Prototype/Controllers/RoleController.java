@@ -61,7 +61,7 @@ public class RoleController {
     }
 
     //Asignar un rol a un usuario
-    @PutMapping("/role")
+    @PutMapping("/assignUserToRole")
     public ResponseEntity<RoleDTO> assignUserRole(@RequestBody UserRoleAssignmentDTO assignmentDTO) {
         try {
             // Llama al servicio para procesar la asignación

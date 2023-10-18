@@ -3,6 +3,7 @@ package com.Prodiit.Prototype.Services;
 import com.Prodiit.Prototype.Models.Dtos.UserDTO;
 import com.Prodiit.Prototype.Models.Entitys.RoleEntity;
 import com.Prodiit.Prototype.Models.Entitys.UserEntity;
+import com.Prodiit.Prototype.Respositorys.RoleRepository;
 import com.Prodiit.Prototype.Respositorys.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import java.util.*;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public UserDTO createAndSaveUser(UserDTO userDTO) {
@@ -144,7 +147,11 @@ public class UserService {
         existingUserEntity.setEmail(updatedUserDTO.getEmail());
         existingUserEntity.setImage(updatedUserDTO.getImage());
 
-        // Actualiza cualquier otro campo necesario
+        // Actualiza el campo "role" utilizando el ID proporcionado en UserDTO
+        long roleId = updatedUserDTO.getRoleId();
+        RoleEntity roleEntity = roleRepository.findById(roleId)
+                .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado"));
+        existingUserEntity.setRole(roleEntity);
 
         // Guarda el usuario actualizado en la base de datos
         UserEntity updatedUserEntity = userRepository.save(existingUserEntity);

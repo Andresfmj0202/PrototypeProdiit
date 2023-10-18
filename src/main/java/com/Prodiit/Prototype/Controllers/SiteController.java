@@ -2,9 +2,11 @@ package com.Prodiit.Prototype.Controllers;
 
 import com.Prodiit.Prototype.Models.Dtos.SiteDTO;
 import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
+import com.Prodiit.Prototype.Respositorys.CompanyRepository;
 import com.Prodiit.Prototype.Services.CompanyService;
 import com.Prodiit.Prototype.Models.Entitys.SiteEntity;
 import com.Prodiit.Prototype.Services.SiteService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +22,13 @@ public class SiteController {
     private final SiteService siteService;
     private final CompanyService companyService;
 
+    private final CompanyRepository companyRepository;
+
     @Autowired
-    public SiteController(SiteService siteService, CompanyService companyService) {
+    public SiteController(SiteService siteService, CompanyService companyService, CompanyRepository companyRepository) {
         this.siteService = siteService;
         this.companyService = companyService;
+        this.companyRepository = companyRepository;
     }
 
 @PostMapping
@@ -100,8 +105,32 @@ public class SiteController {
     }
 
     @PutMapping("/{id}")
-    public SiteEntity updateSite(@PathVariable("id") long siteId,@RequestBody SiteEntity siteEntity) {
-        return siteService.updateSite(siteId,siteEntity);
+    public SiteDTO updateSite(@PathVariable("id") long siteId, @RequestBody SiteDTO siteDTO) {
+        // Convierte el DTO a una entidad SiteEntity
+        SiteEntity siteEntity = new SiteEntity();
+        siteEntity.setSiteId(siteId);
+        siteEntity.setName(siteDTO.getName());
+        siteEntity.setDescription(siteDTO.getDescription());
+
+        // Busca la instancia de CompanyEntity a partir del UUID proporcionado en SiteDTO
+        UUID companyId = siteDTO.getCompanyId();
+        CompanyEntity companyEntity = companyRepository.findById(companyId)
+                .orElseThrow(() -> new EntityNotFoundException("Compañía no encontrada"));
+
+        // Asigna la instancia de CompanyEntity a SiteEntity
+        siteEntity.setCompany(companyEntity);
+
+        // Llama al servicio para actualizar la entidad
+        siteEntity = siteService.updateSite(siteId, siteEntity);
+
+        // Convierte la entidad actualizada a un DTO y devuélvelo
+        SiteDTO updatedSiteDTO = new SiteDTO();
+        updatedSiteDTO.setSiteId(siteEntity.getSiteId());
+        updatedSiteDTO.setName(siteEntity.getName());
+        updatedSiteDTO.setDescription(siteEntity.getDescription());
+        updatedSiteDTO.setCompanyId(siteEntity.getCompany().getCompanyId());
+
+        return updatedSiteDTO;
     }
 
     @DeleteMapping("/{id}")

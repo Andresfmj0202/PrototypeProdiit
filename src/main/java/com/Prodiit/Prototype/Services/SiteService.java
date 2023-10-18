@@ -43,8 +43,13 @@ public class SiteService {
     }
 
     //actualizar un sitio
-    public SiteEntity updateSite(long siteId, SiteEntity siteEntity){
+    public SiteEntity updateSite(long siteId, SiteEntity siteEntity) {
+        // Realiza cualquier validación necesaria aquí
+
+        // Establece el ID de la entidad si no se ha establecido previamente
         siteEntity.setSiteId(siteId);
+
+        // Llama al repositorio para guardar o actualizar la entidad
         return siteRepository.save(siteEntity);
     }
 

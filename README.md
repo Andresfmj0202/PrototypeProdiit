@@ -7,7 +7,7 @@ Repositorio de pruebas de API para Prodiit
 - [Role](#role)
 - [Login](#login)
 - [AddCompanyToUser](#addcompanytouser)
-- -[Site](#Site)
+- [Site](#Site)
 
 ## Configuración
 

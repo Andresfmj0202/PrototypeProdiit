@@ -1,6 +1,6 @@
 package com.Prodiit.Prototype.Models.Entitys;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -21,11 +21,13 @@ public class UserEntity {
     private String image;
 
     @ManyToMany
+    @JsonBackReference
     @JoinTable(
             name = "user_company",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "company_id")
     )
+    @JsonIdentityReference(alwaysAsId = true)
     private Set<CompanyEntity> companies = new HashSet<>();
 
     @JsonManagedReference

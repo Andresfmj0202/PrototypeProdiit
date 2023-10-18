@@ -71,8 +71,13 @@ public class CompanyService {
         return companyRepository.findCompanyByName(name);
     }
 
-    public CompanyEntity updateCompany(UUID id, CompanyEntity companyEntity){
+    public CompanyEntity updateCompany(UUID id, CompanyEntity companyEntity) {
+        // Realiza cualquier validación necesaria aquí
+
+        // Establece el ID de la entidad si no se ha establecido previamente
         companyEntity.setCompanyId(id);
+
+        // Llama al repositorio para guardar o actualizar la entidad
         return companyRepository.save(companyEntity);
     }
 

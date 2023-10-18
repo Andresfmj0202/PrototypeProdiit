@@ -1,12 +1,13 @@
 package com.Prodiit.Prototype.Models.Entitys;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.*;
 
 @Entity
 @Table (name = "company")
+@JsonIdentityReference(alwaysAsId = true)
 public class CompanyEntity {
 
     @Id

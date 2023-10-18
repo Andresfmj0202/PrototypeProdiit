@@ -74,10 +74,26 @@ public class CompanyController {
     }
 
     //actualizar empresa
-    @PutMapping("/{id}")
-    public CompanyEntity updateCompany(@PathVariable UUID id, @RequestBody CompanyEntity company){
-        company.setCompanyId(id);
-        return companyService.updateCompany(id,company);
+    @PutMapping(value = "/{id}", consumes = "application/json;charset=UTF-8")
+    public CompanyDTO updateCompany(@PathVariable UUID id, @RequestBody CompanyDTO companyDTO) {
+        // Convierte el DTO a una entidad CompanyEntity
+        CompanyEntity companyEntity = new CompanyEntity();
+        companyEntity.setCompanyId(id);
+        companyEntity.setName(companyDTO.getName());
+        companyEntity.setDescription(companyDTO.getDescription());
+        companyEntity.setImageLogo(companyDTO.getImageLogo());
+
+        // Llama al servicio para actualizar la entidad
+        companyEntity = companyService.updateCompany(id, companyEntity);
+
+        // Convierte la entidad actualizada a un DTO y devuélvelo
+        CompanyDTO updatedCompanyDTO = new CompanyDTO();
+        updatedCompanyDTO.setCompanyId(companyEntity.getCompanyId());
+        updatedCompanyDTO.setName(companyEntity.getName());
+        updatedCompanyDTO.setDescription(companyEntity.getDescription());
+        updatedCompanyDTO.setImageLogo(companyEntity.getImageLogo());
+
+        return updatedCompanyDTO;
     }
 
     //borrar empresa
