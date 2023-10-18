@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+
 @RestController
 @RequestMapping("/role")
 public class RoleController {
@@ -29,8 +30,9 @@ public class RoleController {
     }
     //Crear Role
     @PostMapping
-    public Object save(@RequestBody RoleEntity roleEntity) {
-        return roleService.saveRole(roleEntity);
+    public Object save(@RequestBody RoleDTO roleDTO) {
+        RoleEntity roleEntity = roleService.saveRole(roleDTO);
+        return roleEntity;
     }
 
     //Obtener todos los Roles

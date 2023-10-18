@@ -8,6 +8,7 @@ import com.Prodiit.Prototype.Models.Entitys.UserEntity;
 import com.Prodiit.Prototype.Respositorys.RoleRepository;
 import com.Prodiit.Prototype.Respositorys.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,11 @@ public class RoleService {
 
     }
 
-    public RoleEntity saveRole(RoleEntity roleEntity) {
+    public RoleEntity saveRole(RoleDTO roleDTO) {
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setName(roleDTO.getName());
+        roleEntity.setDescription(roleDTO.getDescription());
+        // Puedes configurar otras propiedades según sea necesario
         return roleRepository.save(roleEntity);
     }
 
@@ -61,7 +66,6 @@ public class RoleService {
     public void deleteRole(long id) {
         roleRepository.deleteById(id);
     }
-
     public RoleDTO assignUserToRole(UserRoleAssignmentDTO assignmentDTO) {
         // Recupera el rol desde la base de datos
         RoleEntity roleEntity = roleRepository.findById(assignmentDTO.getRoleId())
