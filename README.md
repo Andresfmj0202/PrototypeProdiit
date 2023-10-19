@@ -82,10 +82,24 @@ Si deseas obtener más información sobre la configuración avanzada o la estruc
 - **URL:** `/user`
 - **Descripción:** Este endpoint permite crear un nuevo usuario. El cuerpo de la solicitud debe contener los datos del usuario en formato JSON. Llama al método `createAndSaveUser` del servicio `UserService` para guardar el usuario en la base de datos.
 
+- Peticion de ejemplo en Postman
+```json
+{
+    "name":"prueba",
+    "email":"prueba@gmail",
+    "password":"123prueba",
+    "image":"prueba.png",
+    "roleId":"1" 
+}
+```
+
 ### Obtener Todos los Usuarios
 - **Método:** `GET`
 - **URL:** `/user`
 - **Descripción:** Este endpoint devuelve una lista de todos los usuarios registrados en el sistema. Llama al método `getAllUsers` del servicio `UserService`.
+```
+http://localhost:8080/user
+```
 
 ### Obtener Usuario por ID
 - **Método:** `GET`
@@ -120,7 +134,14 @@ Este controlador maneja operaciones relacionadas con empresas.
 - **Método:** `POST`
 - **URL:** `/company`
 - **Descripción:** Crea una nueva empresa. Debe proporcionar los detalles de la empresa en formato JSON en el cuerpo de la solicitud. Llama al método `createAndSaveCompany` del servicio `CompanyService` para guardar la empresa en la base de datos.
-
+-Peticion de ejemplo en Postman
+```json
+{
+    "name":"Excamix",
+    "description":" Exploracion de minas",
+    "imageLogo":"Logo.png"
+}
+```
 ### Obtener Todas las Empresas
 - **Método:** `GET`
 - **URL:** `/company`
@@ -151,7 +172,7 @@ Este controlador maneja operaciones relacionadas con empresas.
 Este endpoint permite obtener el número de sitios asociados a una empresa específica. El número de sitios es determinado por el servicio `companyService`, que realiza la lógica para contar los sitios asociados a la empresa.
 
 - **Método:** `GET`
-- **URL:** `/{id}/sites`
+- **URL:** `company/{id}/sites`
 
 ### Parámetros de la Solicitud
 - `id` (UUID): El ID de la empresa de la cual deseas obtener el número de sitios asociados. Debes proporcionar este ID en la URL.
@@ -177,7 +198,13 @@ Nota: Asegúrate de que el servicio companyService esté configurado adecuadamen
 - **Método:** `POST`
 - **URL:** `/role`
 - **Descripción:** Crea un nuevo rol. Debe proporcionar los detalles del rol en formato JSON en el cuerpo de la solicitud. Llama al método `saveRole` del servicio `RoleService` para guardar el rol.
-
+-Peticion de ejemplo en Postman
+```json
+  {
+    "name":"consultores",
+    "description":"permisos parciales"
+   }
+  ```
 ### Obtener Todos los Roles
 - **Método:** `GET`
 - **URL:** `/role`
@@ -199,8 +226,15 @@ Nota: Asegúrate de que el servicio companyService esté configurado adecuadamen
 
 ## Asignar un Rol a un Usuario
 - **Método:** `PUT`
-- **URL:** `/role/user/{userId}/role/{roleId}`
+- **URL:** `/role/assignUserToRole`
 - **Descripción:** Asigna un rol específico a un usuario. Debes proporcionar el ID del usuario y el ID del rol en la URL. Verifica si el usuario y el rol existen y, si es así, asigna el rol al usuario. Esto se realiza llamando al método `asignarRolAUsuario` del servicio `RoleService`.
+-Peticion de ejemplo en Postman.
+```json
+{
+    "userId": "2b899b7f-77bd-4429-be01-b5ae2da958bf",
+    "roleId":"4"
+}
+```
 
 ## Login
 Este controlador maneja operaciones relacionadas con la autenticación de usuarios y la generación de tokens de acceso.
@@ -213,6 +247,13 @@ Este controlador maneja operaciones relacionadas con la autenticación de usuari
 #### Parámetros de la Solicitud
 - `email` (cadena): Correo electrónico del usuario.
 - `password` (cadena): Contraseña del usuario.
+- Peticion de ejemplo en Postman.
+```json
+{
+    "email":"prueba@gmail",
+    "password":"123prueba"
+}
+```
 
 #### Respuestas
 - **Código 200 (Éxito):** Si la autenticación es exitosa, se devuelve un mensaje de éxito junto con un token de acceso (en este ejemplo, se usa un token ficticio). La respuesta es del tipo `ResponseEntity<String>`.
@@ -229,6 +270,13 @@ Este controlador maneja operaciones relacionadas con la adición de usuarios a e
 #### Parámetros de la Solicitud
 - `userId` (cadena): El ID del usuario que se va a agregar a la empresa.
 - `companyId` (cadena): El ID de la empresa a la que se va a agregar el usuario.
+- Peticion de ejemplo en Postman.
+```json
+{
+    "userId": "d57d4b0c-c7d0-40ea-9c56-576c6f3434ff",
+    "companyId": "10430312-b85c-4704-ae9d-c652b3ee1a98"
+}
+```
 
 #### Respuestas
 - **Código 200 (Éxito):** Si la operación es exitosa, se devuelve un mensaje de éxito indicando que el usuario se ha agregado con éxito a la empresa. La respuesta es del tipo `ResponseEntity<String>`.
@@ -261,7 +309,14 @@ Este endpoint permite crear y guardar un nuevo sitio. Debes proporcionar los dat
 **URL:** /site
 
 Este endpoint permite crear y guardar un nuevo sitio. Debes proporcionar los datos del sitio en formato JSON en el cuerpo de la solicitud.
-
+-Peticion de ejemplo en Postman
+```json
+{
+    "name":"sitePrueba",
+    "description":"hola soy un site de prueba",
+    "companyId": "10430312-b85c-4704-ae9d-c652b3ee1a98"
+}
+```
 **Respuesta Exitosa:**
 El sitio se crea con éxito y se devuelve un DTO con los detalles del sitio, incluido su ID.
 

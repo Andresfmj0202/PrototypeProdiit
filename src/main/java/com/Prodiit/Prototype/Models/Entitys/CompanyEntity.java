@@ -11,6 +11,7 @@ import java.util.*;
 public class CompanyEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID CompanyId;
 
     private String name;

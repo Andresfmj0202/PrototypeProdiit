@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SiteService {
@@ -57,5 +59,24 @@ public class SiteService {
     public void deleteSite(long siteId){
         siteRepository.deleteById(siteId);
 
+    }
+
+    //traer todos los sitios por la id de la compañia
+    public List<SiteEntity> getSiteByCompanyId(UUID companyId) {
+        return siteRepository.findSitesByCompanyId(companyId);
+    }
+
+    public SiteDTO mapSiteEntityToDTO(SiteEntity siteEntity) {
+        SiteDTO siteDTO = new SiteDTO();
+        siteDTO.setSiteId(siteEntity.getSiteId());
+        siteDTO.setName(siteEntity.getName());
+        siteDTO.setDescription(siteEntity.getDescription());
+        siteDTO.setCompanyId(siteEntity.getCompany().getCompanyId()); // Si la relación con CompanyEntity está mapeada
+        return siteDTO;
+    }
+    public List<SiteDTO> mapSiteEntitiesToDTOs(List<SiteEntity> siteEntities) {
+        return siteEntities.stream()
+                .map(this::mapSiteEntityToDTO)
+                .collect(Collectors.toList());
     }
 }

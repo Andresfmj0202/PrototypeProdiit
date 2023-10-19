@@ -133,6 +133,14 @@ public class SiteController {
         return updatedSiteDTO;
     }
 
+    //traer los sites a travez de un id de la compania
+    @GetMapping("/company/{companyId}")
+    public List<SiteDTO> getSiteByCompanyId(@PathVariable UUID companyId) {
+        List<SiteEntity> siteEntities = siteService.getSiteByCompanyId(companyId);
+        // No es necesario convertir a SiteDTO aquí
+        return siteService.mapSiteEntitiesToDTOs(siteEntities);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteSite(@PathVariable("id") long siteId){
         siteService.deleteSite(siteId);
