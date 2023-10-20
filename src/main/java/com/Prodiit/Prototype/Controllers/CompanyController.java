@@ -5,8 +5,10 @@ import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
 import com.Prodiit.Prototype.Services.CompanyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,34 +42,45 @@ public class CompanyController {
     @GetMapping("/all")
     public List<CompanyDTO> getAllCompanies() {
         List<CompanyEntity> companyEntities = companyService.getAllCompanies();
-        return companyService.mapToDTOList(companyEntities);
+        List<CompanyDTO> companyDTOs = new ArrayList<>();
+
+        for (CompanyEntity entity : companyEntities) {
+            // Crear instancias de CompanyDTO utilizando el constructor modificado
+            CompanyDTO dto = new CompanyDTO(
+                    entity.getCompanyId(),
+                    entity.getName(),
+                    entity.getDescription(),
+                    entity.getImageLogo(),
+                    entity.getSiteCount()
+            );
+
+            companyDTOs.add(dto);
+        }
+
+        return companyDTOs;
     }
 
     //obtener empresa por id
     @GetMapping("/{id}")
-    public CompanyDTO getCompanyById(@PathVariable UUID id){
+    public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable UUID id) {
         Optional<CompanyEntity> company = companyService.getCompanyById(id);
         if (company.isPresent()) {
             CompanyEntity companyEntity = company.get();
-            // Convertir la entidad a un DTO
-            return new CompanyDTO(
-                    companyEntity.getCompanyId(),
-                    companyEntity.getName(),
-                    companyEntity.getDescription(),
-                    companyEntity.getImageLogo()
-            );
+            // Utilizar ModelMapper para convertir la entidad a un DTO
+            CompanyDTO dto = modelMapper.map(companyEntity, CompanyDTO.class);
+            return ResponseEntity.ok(dto);
         } else {
-            // Manejar el caso en el que la empresa no existe
-            return null;
+            // Devolver una respuesta 404 Not Found si la empresa no existe
+            return ResponseEntity.notFound().build();
         }
     }
 
-
-    //obtener empresa por nombre
+    // Obtener empresa por nombre
     @GetMapping("/name/{name}")
     public List<CompanyDTO> getCompanyByName(@PathVariable String name) {
         List<CompanyEntity> companies = companyService.getCompanyByName(name);
 
+        // Utilizar ModelMapper para mapear todas las empresas a DTO
         return companies.stream()
                 .map(companyEntity -> modelMapper.map(companyEntity, CompanyDTO.class))
                 .collect(Collectors.toList());

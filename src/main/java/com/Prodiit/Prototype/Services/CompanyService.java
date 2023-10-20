@@ -2,14 +2,12 @@ package com.Prodiit.Prototype.Services;
 
 import com.Prodiit.Prototype.Models.Dtos.CompanyDTO;
 import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
+import com.Prodiit.Prototype.Models.Entitys.SiteEntity;
 import com.Prodiit.Prototype.Respositorys.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CompanyService {
@@ -36,20 +34,6 @@ public class CompanyService {
         return entity;
     }
 
-
-    public List<CompanyEntity> getAllCompanies(){
-        return companyRepository.findAll();
-    }
-    //
-    public List<CompanyDTO> mapToDTOList(List<CompanyEntity> companyEntities) {
-        List<CompanyDTO> companyDTOs = new ArrayList<>();
-        for (CompanyEntity entity : companyEntities) {
-            companyDTOs.add(mapToDTO(entity));
-        }
-        return companyDTOs;
-    }
-
-
     //mapear a dto
     public CompanyDTO mapToDTO(CompanyEntity companyEntity) {
         CompanyDTO dto = new CompanyDTO();
@@ -59,6 +43,37 @@ public class CompanyService {
         dto.setImageLogo(companyEntity.getImageLogo());
         // Puedes agregar más campos según tus necesidades.
         return dto;
+    }
+
+    public List<CompanyEntity> getAllCompanies() {
+        List<CompanyEntity> companies = companyRepository.findAll();
+
+        // Crear un mapa para almacenar el recuento de sitios por empresa
+        Map<UUID, Integer> siteCounts = new HashMap<>();
+
+        for (CompanyEntity company : companies) {
+            // Contar el número de sitios en la empresa
+            int siteCount = company.getSites().size();
+
+            // Actualizar el recuento de sitios en la entidad de empresa
+            siteCounts.put(company.getCompanyId(), siteCount);
+        }
+
+        // Establecer el recuento de sitios en cada empresa
+        for (CompanyEntity company : companies) {
+            int siteCount = siteCounts.get(company.getCompanyId());
+            company.setSiteCount(siteCount);
+        }
+
+        return companies;
+    }
+    //
+    public List<CompanyDTO> mapToDTOList(List<CompanyEntity> companyEntities) {
+        List<CompanyDTO> companyDTOs = new ArrayList<>();
+        for (CompanyEntity entity : companyEntities) {
+            companyDTOs.add(mapToDTO(entity));
+        }
+        return companyDTOs;
     }
 
 
@@ -95,4 +110,5 @@ public class CompanyService {
             return 0; // Maneja el caso de que la compañía no exista
         }
     }
+
 }

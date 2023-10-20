@@ -1,5 +1,6 @@
 package com.Prodiit.Prototype.Models.Dtos;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CompanyDTO {
@@ -7,6 +8,7 @@ public class CompanyDTO {
     private String name;
     private String description;
     private String imageLogo;
+    private int siteCount;
 
     // Constructores, getters y setters
 
@@ -14,11 +16,12 @@ public class CompanyDTO {
         // Constructor vacío
     }
 
-    public CompanyDTO(UUID companyId, String name, String description, String imageLogo) {
+    public CompanyDTO(UUID companyId, String name, String description, String imageLogo, int siteCount) {
         this.companyId = companyId;
         this.name = name;
         this.description = description;
         this.imageLogo = imageLogo;
+        this.siteCount = siteCount;
     }
 
     // Getters y setters para los campos
@@ -54,4 +57,13 @@ public class CompanyDTO {
     public void setImageLogo(String imageLogo) {
         this.imageLogo = imageLogo;
     }
+
+    public int getSiteCount() {
+        return siteCount;
+    }
+
+    public void setSiteCount(int siteCount) {
+        this.siteCount = siteCount;
+    }
+
 }

@@ -28,20 +28,24 @@ public class CompanyEntity {
     @OneToMany(mappedBy = "company")
     private List<SiteEntity> sites;
 
+    private int siteCount;
 
     public int getSiteCount() {
         return sites.size(); // Método para obtener el número de sitios asociados
     }
+
+
     public CompanyEntity() {
     }
 
-    public CompanyEntity(UUID CompanyId, String name, String description, String imageLogo, Set<UserEntity> users, List<SiteEntity> sites) {
+    public CompanyEntity(UUID CompanyId, String name, String description, String imageLogo, Set<UserEntity> users, List<SiteEntity> sites, int siteCount) {
         this.CompanyId = CompanyId;
         this.name = name;
         this.description = description;
         this.imageLogo = imageLogo;
         this.users = users;
         this.sites = sites;
+        this.siteCount = siteCount;
     }
 
     public UUID getCompanyId() {
@@ -90,5 +94,25 @@ public class CompanyEntity {
 
     public void setSites(List<SiteEntity> sites) {
         this.sites = sites;
+    }
+
+    public void setSiteCount(int siteCount) {
+        this.siteCount = siteCount;
+    }
+
+    public void addSite(SiteEntity site) {
+        if (sites == null) {
+            sites = new ArrayList<>();
+        }
+        sites.add(site);
+        site.setCompany(this); // Establece la relación bidireccional
+        siteCount = sites.size(); // Actualiza el recuento de sitios
+    }
+
+    public void removeSite(SiteEntity site) {
+        if (sites != null && sites.remove(site)) {
+            site.setCompany(null); // Elimina la relación bidireccional
+            siteCount = sites.size(); // Actualiza el recuento de sitios
+        }
     }
 }
