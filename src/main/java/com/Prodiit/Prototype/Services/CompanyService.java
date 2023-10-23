@@ -19,8 +19,16 @@ public class CompanyService {
     }
 
     public CompanyEntity createAndSaveCompany(CompanyEntity companyEntity) {
+        // Verificar que el nombre de la compañía no esté vacío
+        String companyName = companyEntity.getName();
+        if (companyName == null || companyName.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de la compañía no puede estar vacío.");
+        }
+
         // Generar un ID único y asignarlo a la entidad
         companyEntity.setCompanyId(UUID.randomUUID());
+
+        // Guardar la entidad en la base de datos
         return companyRepository.save(companyEntity);
     }
     //mapear entity

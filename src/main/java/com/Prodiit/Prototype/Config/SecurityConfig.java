@@ -4,9 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -17,11 +16,17 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
+                               /* .requestMatchers("/").permitAll()*/ // aca se estableceran los permisos de todas las rutas
+                                /*.anyRequest().authenticated()*/ // aca pedira autentificacion para las demas rutas
                                 .anyRequest().permitAll()  // Permitir todas las rutas
                 )
                 .csrf(csrf -> csrf.disable());  // Deshabilitar CSRF
 
         return http.build();
+    }
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
 

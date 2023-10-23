@@ -2,6 +2,7 @@ package com.Prodiit.Prototype.Models.Entitys;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.*;
 
@@ -11,9 +12,11 @@ import java.util.*;
 public class CompanyEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO) // Utiliza la estrategia de generación automática adecuada para tu base de datos
+    @Column(name = "company_id")
     private UUID CompanyId;
 
+    @NotBlank(message = "El nombre de la compañía es obligatorio")
     private String name;
 
     private String description;

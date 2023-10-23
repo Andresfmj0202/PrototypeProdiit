@@ -2,14 +2,17 @@ package com.Prodiit.Prototype.Controllers;
 
 import com.Prodiit.Prototype.Models.Requests.LoginRequest;
 import com.Prodiit.Prototype.Services.LoginService;
-import com.Prodiit.Prototype.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 // Controlador para gestionar la autenticación
+
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
@@ -28,18 +31,11 @@ public class LoginController {
 
         if (isAuthenticated) {
             // Usuario autenticado con éxito
-            // Aquí, normalmente generas y devuelves un token de acceso en lugar de simplemente un mensaje
-            String accessToken = generateAccessToken(loginRequest.getEmail());
+            String accessToken = loginService.generateAccessToken(loginRequest.getEmail());
             return ResponseEntity.ok("Autenticación exitosa. Token: " + accessToken);
         } else {
             // Error de autenticación
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error de autenticación");
         }
-    }
-
-    // Genera un token de acceso (esto es un ejemplo, debes implementar esto de manera segura)
-    private String generateAccessToken(String email) {
-        // Implementa la generación de tokens JWT u otro método seguro aquí
-        return "sample-access-token";
     }
 }

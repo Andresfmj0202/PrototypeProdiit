@@ -7,24 +7,25 @@ import com.Prodiit.Prototype.Respositorys.RoleRepository;
 import com.Prodiit.Prototype.Respositorys.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDTO createAndSaveUser(UserDTO userDTO) {
@@ -34,8 +35,7 @@ public class UserService {
         userEntity.setImage(userDTO.getImage());
 
         // Obtener o asignar el objeto RoleEntity (dependiendo de tu lógica)
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(userDTO.getRoleId());
+        RoleEntity roleEntity = roleRepository.getReferenceById(userDTO.getRoleId());
         userEntity.setRole(roleEntity);
 
         // Generar un ID único y asignarlo a la entidad
@@ -44,25 +44,12 @@ public class UserService {
         String password = userDTO.getPassword(); // Asegúrate de que getPassword() obtenga la contraseña
 
         if (password != null) {
-            try {
-                SecureRandom random = new SecureRandom();
-                byte[] salt = new byte[16];
-                random.nextBytes(salt);
-                userEntity.setSalt(Base64.getEncoder().encodeToString(salt));
-
-                MessageDigest md = MessageDigest.getInstance("SHA-256");
-                byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
-                byte[] saltedPassword = new byte[salt.length + passwordBytes.length];
-                System.arraycopy(salt, 0, saltedPassword, 0, salt.length);
-                System.arraycopy(passwordBytes, 0, saltedPassword, salt.length, passwordBytes.length);
-                byte[] hashBytes = md.digest(saltedPassword);
-                String hashedPassword = Base64.getEncoder().encodeToString(hashBytes);
-                userEntity.setPassword(hashedPassword);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            // Genera una contraseña segura con Bcrypt
+            String hashedPassword = passwordEncoder.encode(password);
+            userEntity.setPassword(hashedPassword);
         } else {
-            // Manejar el caso en el que la contraseña es nula
+            // Manejar el caso en el que la contraseña es nulla
+            throw new IllegalArgumentException("La contraseña no puede ser nula.");
             // Puedes lanzar una excepción, establecer una contraseña por defecto, etc.
         }
 
