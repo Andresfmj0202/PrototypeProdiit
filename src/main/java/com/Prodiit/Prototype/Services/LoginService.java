@@ -79,4 +79,12 @@ public class LoginService {
             return null; // O devuelve otro valor predeterminado
         }
     }
+
+    public UserEntity getUserEntityByEmail(String email) {
+        List<UserEntity> userEntities = userRepository.findByEmail(email);
+        if (!userEntities.isEmpty()) {
+            return userEntities.get(0);
+        }
+        return null; // Maneja el caso en el que no se encuentra el usuario
+    }
 }
