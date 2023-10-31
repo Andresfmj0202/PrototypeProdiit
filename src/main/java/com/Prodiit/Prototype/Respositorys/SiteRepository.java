@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-public interface SiteRepository extends JpaRepository<SiteEntity, Long> {
+public interface SiteRepository extends JpaRepository<SiteEntity, UUID> {
     List<SiteEntity> findSiteByName(String name);
 
-    @Query("SELECT s FROM SiteEntity s WHERE s.company.id = :companyId")
+    @Query("SELECT s FROM SiteEntity s WHERE s.company.CompanyId = :companyId")
     List<SiteEntity> findSitesByCompanyId(@Param("companyId") UUID companyId);
+
 }

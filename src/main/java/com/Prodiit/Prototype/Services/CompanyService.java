@@ -1,6 +1,7 @@
 package com.Prodiit.Prototype.Services;
 
 import com.Prodiit.Prototype.Models.Dtos.CompanyDTO;
+import com.Prodiit.Prototype.Models.Dtos.SiteDTO;
 import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
 import com.Prodiit.Prototype.Models.Entitys.SiteEntity;
 import com.Prodiit.Prototype.Respositorys.CompanyRepository;
@@ -75,6 +76,7 @@ public class CompanyService {
 
         return companies;
     }
+
     //
     public List<CompanyDTO> mapToDTOList(List<CompanyEntity> companyEntities) {
         List<CompanyDTO> companyDTOs = new ArrayList<>();
@@ -83,7 +85,6 @@ public class CompanyService {
         }
         return companyDTOs;
     }
-
 
     //
     public Optional<CompanyEntity> getCompanyById(UUID id){

@@ -1,7 +1,9 @@
 package com.Prodiit.Prototype.Controllers;
 
 import com.Prodiit.Prototype.Models.Dtos.CompanyDTO;
+import com.Prodiit.Prototype.Models.Dtos.SiteDTO;
 import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
+import com.Prodiit.Prototype.Models.Entitys.SiteEntity;
 import com.Prodiit.Prototype.Services.CompanyService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.Prodiit.Prototype.Controllers.SiteController.getSiteDTO;
 
 @RestController
 @RequestMapping("/company")
@@ -45,19 +49,32 @@ public class CompanyController {
         List<CompanyDTO> companyDTOs = new ArrayList<>();
 
         for (CompanyEntity entity : companyEntities) {
-            // Crear instancias de CompanyDTO utilizando el constructor modificado
+            // Convierte las entidades de sitios en DTOs de sitios
+            List<SiteDTO> siteDTOs = entity.getSites().stream()
+                    .map(siteEntity -> convertSiteEntityToDTO(siteEntity))
+                    .collect(Collectors.toList());
+
+            // Crea instancias de CompanyDTO utilizando el constructor modificado
             CompanyDTO dto = new CompanyDTO(
                     entity.getCompanyId(),
                     entity.getName(),
                     entity.getDescription(),
                     entity.getImageLogo(),
-                    entity.getSiteCount()
+                    entity.getSiteCount(),
+                    siteDTOs // Usa la lista de DTOs de sitios
             );
 
             companyDTOs.add(dto);
         }
 
         return companyDTOs;
+    }
+
+    // Método para convertir SiteEntity en SiteDTO
+    private SiteDTO convertSiteEntityToDTO(SiteEntity siteEntity) {
+        // Aquí debes implementar la lógica para crear un SiteDTO a partir de un SiteEntity
+        // Puedes copiar los campos necesarios y mapearlos según corresponda
+        return getSiteDTO(siteEntity);
     }
 
     //obtener empresa por id

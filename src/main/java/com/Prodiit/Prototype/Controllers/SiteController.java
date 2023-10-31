@@ -1,6 +1,8 @@
 package com.Prodiit.Prototype.Controllers;
 
+import com.Prodiit.Prototype.Models.Dtos.AreaDTO;
 import com.Prodiit.Prototype.Models.Dtos.SiteDTO;
+import com.Prodiit.Prototype.Models.Entitys.AreaEntity;
 import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
 import com.Prodiit.Prototype.Respositorys.CompanyRepository;
 import com.Prodiit.Prototype.Services.CompanyService;
@@ -31,7 +33,7 @@ public class SiteController {
         this.companyRepository = companyRepository;
     }
 
-@PostMapping
+    @PostMapping
     public SiteDTO createAndSaveSite(@RequestBody SiteDTO siteDTO) {
         SiteEntity siteEntity = new SiteEntity();
         siteEntity.setName(siteDTO.getName());
@@ -54,7 +56,8 @@ public class SiteController {
                     siteEntity.getSiteId(),
                     siteEntity.getName(),
                     siteEntity.getDescription(),
-                    companyId  // Utiliza el mismo ID de compañía que se proporcionó
+                    company.getCompanyId(),  // Utiliza el ID de compañía de la entidad CompanyEntity
+                    new ArrayList<AreaDTO>()  // Puedes inicializar esto como una lista vacía o proporcionar áreas si es necesario
             );
         } else {
             // Maneja el caso en el que la compañía no existe
@@ -74,7 +77,7 @@ public class SiteController {
     }
 
     @GetMapping("/{id}")
-    public SiteDTO getSiteById(@PathVariable("id") long siteId) {
+    public SiteDTO getSiteById(@PathVariable("id") UUID siteId) {
         Optional<SiteEntity> siteEntityOptional = siteService.getSiteById(siteId);
         if (siteEntityOptional.isPresent()) {
             SiteEntity siteEntity = siteEntityOptional.get();
@@ -100,12 +103,30 @@ public class SiteController {
                 siteEntity.getSiteId(),
                 siteEntity.getName(),
                 siteEntity.getDescription(),
-                siteEntity.getCompany().getCompanyId()  // Ajusta esto según tu modelo de datos
+                siteEntity.getCompany().getCompanyId(),
+                mapAreaEntitiesToAreaDTOs(siteEntity.getAreas())  // Ajusta esto según tu modelo de datos
+        );
+    }
+    private List<AreaDTO> mapAreaEntitiesToAreaDTOs(List<AreaEntity> areaEntities) {
+        List<AreaDTO> areaDTOs = new ArrayList<>();
+        for (AreaEntity areaEntity : areaEntities) {
+            areaDTOs.add(mapAreaEntityToAreaDTO(areaEntity));
+        }
+        return areaDTOs;
+    }
+
+    private AreaDTO mapAreaEntityToAreaDTO(AreaEntity areaEntity) {
+        return new AreaDTO(
+                areaEntity.getAreaId(),
+                areaEntity.getName(),
+                areaEntity.getType(),
+                areaEntity.getDateCreated(),
+                areaEntity.getSite().getSiteId()
         );
     }
 
     @PutMapping("/{id}")
-    public SiteDTO updateSite(@PathVariable("id") long siteId, @RequestBody SiteDTO siteDTO) {
+    public SiteDTO updateSite(@PathVariable("id") UUID siteId, @RequestBody SiteDTO siteDTO) {
         // Convierte el DTO a una entidad SiteEntity
         SiteEntity siteEntity = new SiteEntity();
         siteEntity.setSiteId(siteId);
@@ -123,7 +144,17 @@ public class SiteController {
         // Llama al servicio para actualizar la entidad
         siteEntity = siteService.updateSite(siteId, siteEntity);
 
-        // Convierte la entidad actualizada a un DTO y devuélvelo
+        // Mapea la entidad actualizada a un nuevo DTO, incluyendo la lista de áreas
+        return new SiteDTO(
+                siteEntity.getSiteId(),
+                siteEntity.getName(),
+                siteEntity.getDescription(),
+                siteEntity.getCompany().getCompanyId(),
+                mapAreaEntitiesToAreaDTOs(siteEntity.getAreas())  // Ajusta esto según tu modelo de datos
+        );
+    }
+
+    public static SiteDTO getSiteDTO(SiteEntity siteEntity) {
         SiteDTO updatedSiteDTO = new SiteDTO();
         updatedSiteDTO.setSiteId(siteEntity.getSiteId());
         updatedSiteDTO.setName(siteEntity.getName());
@@ -141,8 +172,9 @@ public class SiteController {
         return siteService.mapSiteEntitiesToDTOs(siteEntities);
     }
 
+
     @DeleteMapping("/{id}")
-    public void deleteSite(@PathVariable("id") long siteId){
+    public void deleteSite(@PathVariable("id") UUID siteId){
         siteService.deleteSite(siteId);
     }
 

@@ -1,5 +1,6 @@
 package com.Prodiit.Prototype.Models.Dtos;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CompanyDTO {
@@ -8,6 +9,7 @@ public class CompanyDTO {
     private String description;
     private String imageLogo;
     private int siteCount;
+    private List<SiteDTO> siteDTOList;
 
     // Constructores, getters y setters
 
@@ -15,12 +17,14 @@ public class CompanyDTO {
         // Constructor vacío
     }
 
-    public CompanyDTO(UUID companyId, String name, String description, String imageLogo, int siteCount) {
+    public CompanyDTO(UUID companyId, String name, String description, String imageLogo, int siteCount, List<SiteDTO> siteDTOList) {
         this.companyId = companyId;
         this.name = name;
         this.description = description;
         this.imageLogo = imageLogo;
         this.siteCount = siteCount;
+        this.siteDTOList = siteDTOList;
+
     }
 
     // Getters y setters para los campos
@@ -65,4 +69,11 @@ public class CompanyDTO {
         this.siteCount = siteCount;
     }
 
+    public List<SiteDTO> getSiteDTOList() {
+        return siteDTOList;
+    }
+
+    public void setSiteDTOList(List<SiteDTO> siteDTOList) {
+        this.siteDTOList = siteDTOList;
+    }
 }

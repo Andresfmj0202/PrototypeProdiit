@@ -1,31 +1,31 @@
 package com.Prodiit.Prototype.Models.Dtos;
 
+import java.util.List;
 import java.util.UUID;
 
 public class SiteDTO {
-    private long siteId;
+    private UUID siteId;
     private String name;
     private String description;
     private UUID companyId;  // Usamos un UUID para el ID de la compañía
+    private List<AreaDTO> areasDTOList;
 
     public SiteDTO() {
-        // Constructor vacío
     }
 
-    public SiteDTO(long siteId, String name, String description, UUID companyId) {
+    public SiteDTO(UUID siteId, String name, String description, UUID companyId, List<AreaDTO> areasDTOList) {
         this.siteId = siteId;
         this.name = name;
         this.description = description;
         this.companyId = companyId;
+        this.areasDTOList = areasDTOList;
     }
 
-    // Getters y setters para los campos
-
-    public long getSiteId() {
+    public UUID getSiteId() {
         return siteId;
     }
 
-    public void setSiteId(long siteId) {
+    public void setSiteId(UUID siteId) {
         this.siteId = siteId;
     }
 
@@ -51,5 +51,13 @@ public class SiteDTO {
 
     public void setCompanyId(UUID companyId) {
         this.companyId = companyId;
+    }
+
+    public List<AreaDTO> getAreasDTOList() {
+        return areasDTOList;
+    }
+
+    public void setAreasDTOList(List<AreaDTO> areasDTOList) {
+        this.areasDTOList = areasDTOList;
     }
 }

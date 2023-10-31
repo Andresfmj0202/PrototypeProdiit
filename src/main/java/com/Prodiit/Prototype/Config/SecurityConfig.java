@@ -16,7 +16,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                               /* .requestMatchers("/").permitAll()*/ // aca se estableceran los permisos de todas las rutas
+                                /* .requestMatchers("/").permitAll()*/ // aca se estableceran los permisos de todas las rutas
                                 /*.anyRequest().authenticated()*/ // aca pedira autentificacion para las demas rutas
                                 .anyRequest().permitAll()  // Permitir todas las rutas
                 )
@@ -29,4 +29,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-

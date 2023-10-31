@@ -6,11 +6,12 @@ import com.Prodiit.Prototype.Respositorys.SiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.Prodiit.Prototype.Controllers.SiteController.getSiteDTO;
 
 @Service
 public class SiteService {
@@ -35,7 +36,7 @@ public class SiteService {
     }
 
     //obtener un sitio por id
-    public Optional<SiteEntity> getSiteById(long siteId){
+    public Optional<SiteEntity> getSiteById(UUID siteId){
         return siteRepository.findById(siteId);
     }
 
@@ -45,7 +46,7 @@ public class SiteService {
     }
 
     //actualizar un sitio
-    public SiteEntity updateSite(long siteId, SiteEntity siteEntity) {
+    public SiteEntity updateSite(UUID siteId, SiteEntity siteEntity) {
         // Realiza cualquier validación necesaria aquí
 
         // Establece el ID de la entidad si no se ha establecido previamente
@@ -56,7 +57,7 @@ public class SiteService {
     }
 
     //eliminar un sitio
-    public void deleteSite(long siteId){
+    public void deleteSite(UUID siteId){
         siteRepository.deleteById(siteId);
 
     }
@@ -67,12 +68,7 @@ public class SiteService {
     }
 
     public SiteDTO mapSiteEntityToDTO(SiteEntity siteEntity) {
-        SiteDTO siteDTO = new SiteDTO();
-        siteDTO.setSiteId(siteEntity.getSiteId());
-        siteDTO.setName(siteEntity.getName());
-        siteDTO.setDescription(siteEntity.getDescription());
-        siteDTO.setCompanyId(siteEntity.getCompany().getCompanyId()); // Si la relación con CompanyEntity está mapeada
-        return siteDTO;
+        return getSiteDTO(siteEntity);
     }
     public List<SiteDTO> mapSiteEntitiesToDTOs(List<SiteEntity> siteEntities) {
         return siteEntities.stream()
