@@ -34,6 +34,9 @@ public class UserService {
         userEntity.setEmail(userDTO.getEmail());
         userEntity.setImage(userDTO.getImage());
 
+        // Establecer el valor predeterminado de status en true
+        userEntity.setStatus(true);
+
         // Obtener o asignar el objeto RoleEntity (dependiendo de tu lógica)
         RoleEntity roleEntity = roleRepository.getReferenceById(userDTO.getRoleId());
         userEntity.setRole(roleEntity);
@@ -48,7 +51,7 @@ public class UserService {
             String hashedPassword = passwordEncoder.encode(password);
             userEntity.setPassword(hashedPassword);
         } else {
-            // Manejar el caso en el que la contraseña es nulla
+            // Manejar el caso en el que la contraseña es nula
             throw new IllegalArgumentException("La contraseña no puede ser nula.");
             // Puedes lanzar una excepción, establecer una contraseña por defecto, etc.
         }
@@ -61,6 +64,7 @@ public class UserService {
         createdUserDTO.setEmail(createdUserEntity.getEmail());
         createdUserDTO.setImage(createdUserEntity.getImage());
         createdUserDTO.setRoleId(createdUserEntity.getRole().getRoleId());
+        createdUserDTO.setStatus(createdUserEntity.isStatus()); // Agregar el estado
 
         return createdUserDTO;
     }
@@ -92,7 +96,8 @@ public class UserService {
                 userEntity.getEmail(),
                 userEntity.getImage(),
                 userEntity.getRole().getRoleId(),
-                userEntity.getPassword()
+                userEntity.getPassword(),
+                userEntity.isStatus()
                 // Ajusta esto según tu modelo de datos
         );
     }
@@ -133,6 +138,7 @@ public class UserService {
         existingUserEntity.setName(updatedUserDTO.getName());
         existingUserEntity.setEmail(updatedUserDTO.getEmail());
         existingUserEntity.setImage(updatedUserDTO.getImage());
+        existingUserEntity.setStatus(updatedUserDTO.isStatus()); // Actualizar el estado
 
         // Actualiza el campo "role" utilizando el ID proporcionado en UserDTO
         long roleId = updatedUserDTO.getRoleId();
@@ -150,6 +156,7 @@ public class UserService {
         updatedUserResultDTO.setEmail(updatedUserEntity.getEmail());
         updatedUserResultDTO.setImage(updatedUserEntity.getImage());
         updatedUserResultDTO.setRoleId(updatedUserEntity.getRole().getRoleId());
+        updatedUserResultDTO.setStatus(updatedUserEntity.isStatus()); // Agregar el estado
 
         return updatedUserResultDTO;
     }
@@ -157,6 +164,13 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public boolean statusUser(UUID id){
+        UserEntity userEntity = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+        userEntity.setStatus(!userEntity.isStatus());
+        userRepository.save(userEntity);
+        return userEntity.isStatus();
+    }
 
 
 }

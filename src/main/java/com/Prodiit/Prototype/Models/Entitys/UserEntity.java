@@ -19,6 +19,7 @@ public class UserEntity {
     private String password;
     private String salt;
     private String image;
+    private boolean status;
 
     @ManyToMany
     @JsonBackReference
@@ -38,7 +39,7 @@ public class UserEntity {
 
     }
 
-    public UserEntity(UUID userId, String name, String email, String password, String salt, String image, Set<CompanyEntity> companies, RoleEntity role) {
+    public UserEntity(UUID userId, String name, String email, String password, String salt, String image, Set<CompanyEntity> companies, RoleEntity role, boolean status) {
         UserId = userId;
         this.name = name;
         this.email = email;
@@ -47,6 +48,7 @@ public class UserEntity {
         this.image = image;
         this.companies = companies;
         this.role = role;
+        this.status = status;
     }
 
     public UUID getUserId() {
@@ -111,5 +113,13 @@ public class UserEntity {
 
     public void setRole(RoleEntity role) {
         this.role = role;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

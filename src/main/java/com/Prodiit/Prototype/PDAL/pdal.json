@@ -1,0 +1,17 @@
+{
+  "pipeline": [
+    {
+      "type": "readers.las",
+      "filename": "/ruta/a/tu/archivo.laz"
+    },
+    {
+      "type": "filters.reprojection",
+      "in_srs": "EPSG:2993",
+      "out_srs": "EPSG:3857"
+    },
+    {
+      "type": "writers.las",
+      "filename": "/ruta/a/tu/archivo/las"
+    }
+  ]
+}

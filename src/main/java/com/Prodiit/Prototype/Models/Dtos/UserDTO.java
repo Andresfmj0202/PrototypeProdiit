@@ -12,19 +12,22 @@ public class UserDTO {
 
     private String password;
 
+    private boolean status;
+
     // Constructores, getters y setters
 
     public UserDTO() {
         // Constructor vacío
     }
 
-    public UserDTO(UUID userId, String name, String email, String image, long roleId, String password) {
+    public UserDTO(UUID userId, String name, String email, String image, long roleId, String password, boolean status) {
         this.userId = userId;
         this.name = name;
         this.email = email;
         this.image = image;
         this.roleId = roleId;
         this.password = password;
+        this.status = status;
     }
 
     // Getters y setters para los campos
@@ -75,5 +78,13 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 }

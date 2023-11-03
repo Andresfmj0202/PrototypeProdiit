@@ -11,20 +11,22 @@ public class CompanyDTO {
     private int siteCount;
     private List<SiteDTO> siteDTOList;
 
+    private boolean statusCompany;
+
     // Constructores, getters y setters
 
     public CompanyDTO() {
         // Constructor vacío
     }
 
-    public CompanyDTO(UUID companyId, String name, String description, String imageLogo, int siteCount, List<SiteDTO> siteDTOList) {
+    public CompanyDTO(UUID companyId, String name, String description, String imageLogo, int siteCount, boolean statusCompany, List<SiteDTO> siteDTOList) {
         this.companyId = companyId;
         this.name = name;
         this.description = description;
         this.imageLogo = imageLogo;
         this.siteCount = siteCount;
+        this.statusCompany = statusCompany;
         this.siteDTOList = siteDTOList;
-
     }
 
     // Getters y setters para los campos
@@ -75,5 +77,13 @@ public class CompanyDTO {
 
     public void setSiteDTOList(List<SiteDTO> siteDTOList) {
         this.siteDTOList = siteDTOList;
+    }
+
+    public boolean isStatusCompany() {
+        return statusCompany;
+    }
+
+    public void setStatusCompany(boolean statusCompany) {
+        this.statusCompany = statusCompany;
     }
 }

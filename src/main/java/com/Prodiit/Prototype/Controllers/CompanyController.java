@@ -31,10 +31,11 @@ public class CompanyController {
         this.modelMapper = modelMapper;
     }
 
-    //crear empresa
+    // Crear empresa
     @PostMapping
     public CompanyDTO createCompany(@RequestBody CompanyDTO companyDTO) {
         CompanyEntity companyEntity = companyService.mapToEntity(companyDTO); // Convierte el DTO a entidad
+        companyEntity.setStatusCompany(true); // Establece el estado como true
         companyEntity = companyService.createAndSaveCompany(companyEntity);
 
         // Ahora, convierte la entidad creada nuevamente a un DTO para devolver en la respuesta
@@ -43,6 +44,8 @@ public class CompanyController {
 
 
     //obtener todos las empresas
+
+    // Obtener todas las empresas
     @GetMapping("/all")
     public List<CompanyDTO> getAllCompanies() {
         List<CompanyEntity> companyEntities = companyService.getAllCompanies();
@@ -61,6 +64,7 @@ public class CompanyController {
                     entity.getDescription(),
                     entity.getImageLogo(),
                     entity.getSiteCount(),
+                    entity.isStatusCompany(),
                     siteDTOs // Usa la lista de DTOs de sitios
             );
 
@@ -78,6 +82,7 @@ public class CompanyController {
     }
 
     //obtener empresa por id
+    // Obtener empresa por ID
     @GetMapping("/{id}")
     public ResponseEntity<CompanyDTO> getCompanyById(@PathVariable UUID id) {
         Optional<CompanyEntity> company = companyService.getCompanyById(id);
@@ -103,15 +108,12 @@ public class CompanyController {
                 .collect(Collectors.toList());
     }
 
-    //actualizar empresa
+    // Actualizar empresa
     @PutMapping(value = "/{id}", consumes = "application/json;charset=UTF-8")
     public CompanyDTO updateCompany(@PathVariable UUID id, @RequestBody CompanyDTO companyDTO) {
         // Convierte el DTO a una entidad CompanyEntity
-        CompanyEntity companyEntity = new CompanyEntity();
+        CompanyEntity companyEntity = companyService.mapToEntity(companyDTO); // Convierte el DTO a entidad
         companyEntity.setCompanyId(id);
-        companyEntity.setName(companyDTO.getName());
-        companyEntity.setDescription(companyDTO.getDescription());
-        companyEntity.setImageLogo(companyDTO.getImageLogo());
 
         // Llama al servicio para actualizar la entidad
         companyEntity = companyService.updateCompany(id, companyEntity);
@@ -122,20 +124,39 @@ public class CompanyController {
         updatedCompanyDTO.setName(companyEntity.getName());
         updatedCompanyDTO.setDescription(companyEntity.getDescription());
         updatedCompanyDTO.setImageLogo(companyEntity.getImageLogo());
+        updatedCompanyDTO.setSiteCount(companyEntity.getSiteCount());
+        updatedCompanyDTO.setStatusCompany(companyEntity.isStatusCompany());
 
         return updatedCompanyDTO;
     }
 
-    //borrar empresa
+    // Borrar empresa
     @DeleteMapping("/{id}")
-    public void deleteCompany(@PathVariable UUID id){
+    public void deleteCompany(@PathVariable UUID id) {
         companyService.deleteCompany(id);
     }
 
-    //obtener el número de sitios asociados a una empresa
+    // Obtener el número de sitios asociados a una empresa
     @GetMapping("/{id}/sites")
-    public int getSiteCountForCompany(@PathVariable UUID id){
+    public int getSiteCountForCompany(@PathVariable UUID id) {
         return companyService.getSiteCountForCompany(id);
+    }
+
+    // Cambiar el estado activo/inactivo de una empresa
+    @PutMapping("/status/{id}")
+    public ResponseEntity<CompanyDTO> updateStatus(@PathVariable UUID id) {
+        CompanyEntity updatedCompanyEntity = companyService.updateStatus(id);
+
+        // Convierte la entidad actualizada a un DTO y devuélvelo en la respuesta
+        CompanyDTO updatedCompanyDTO = new CompanyDTO();
+        updatedCompanyDTO.setCompanyId(updatedCompanyEntity.getCompanyId());
+        updatedCompanyDTO.setName(updatedCompanyEntity.getName());
+        updatedCompanyDTO.setDescription(updatedCompanyEntity.getDescription());
+        updatedCompanyDTO.setImageLogo(updatedCompanyEntity.getImageLogo());
+        updatedCompanyDTO.setSiteCount(updatedCompanyEntity.getSiteCount());
+        updatedCompanyDTO.setStatusCompany(updatedCompanyEntity.isStatusCompany());
+
+        return ResponseEntity.ok(updatedCompanyDTO);
     }
 }
 

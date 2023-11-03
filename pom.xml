@@ -104,6 +104,29 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.2</version> <!-- Verifica la versión más reciente -->
 		</dependency>
+
+		<!--esta es la dependecia manejadora para los archivos  -->
+		<!-- https://mvnrepository.com/artifact/io.pdal/pdal -->
+		<dependency>
+			<groupId>io.pdal</groupId>
+			<artifactId>pdal_3</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.pdal/pdal-scala -->
+		<dependency>
+			<groupId>io.pdal</groupId>
+			<artifactId>pdal-scala_2.13</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.pdal/pdal-native -->
+		<dependency>
+			<groupId>io.pdal</groupId>
+			<artifactId>pdal-native</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

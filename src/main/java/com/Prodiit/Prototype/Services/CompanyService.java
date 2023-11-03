@@ -5,6 +5,7 @@ import com.Prodiit.Prototype.Models.Dtos.SiteDTO;
 import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
 import com.Prodiit.Prototype.Models.Entitys.SiteEntity;
 import com.Prodiit.Prototype.Respositorys.CompanyRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,6 +119,15 @@ public class CompanyService {
         } else {
             return 0; // Maneja el caso de que la compañía no exista
         }
+    }
+
+    //cambiar estado
+    public CompanyEntity updateStatus(UUID companyId) {
+        CompanyEntity companyEntity = companyRepository.findById(companyId)
+                .orElseThrow(() -> new EntityNotFoundException("Empresa no encontrada"));
+
+        companyEntity.setStatusCompany(!companyEntity.isStatusCompany());
+        return companyRepository.save(companyEntity);
     }
 
 }

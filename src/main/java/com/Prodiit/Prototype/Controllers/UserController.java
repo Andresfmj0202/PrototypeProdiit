@@ -94,4 +94,9 @@ public class UserController {
     public void deleteUser(@PathVariable UUID id){
         userService.deleteUser(id);
     }
+
+    @PutMapping("/status/{id}")
+    public boolean updateStatus(@PathVariable UUID id) {
+        return userService.statusUser(id);
+    }
 }

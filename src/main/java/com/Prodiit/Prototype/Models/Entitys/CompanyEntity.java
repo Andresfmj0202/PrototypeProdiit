@@ -3,6 +3,7 @@ package com.Prodiit.Prototype.Models.Entitys;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
 
 import java.util.*;
 
@@ -36,12 +37,14 @@ public class CompanyEntity {
     public int getSiteCount() {
         return sites.size(); // Método para obtener el número de sitios asociados
     }
+    @Getter
+    public boolean statusCompany;
 
 
     public CompanyEntity() {
     }
 
-    public CompanyEntity(UUID CompanyId, String name, String description, String imageLogo, Set<UserEntity> users, List<SiteEntity> sites, int siteCount) {
+    public CompanyEntity(UUID CompanyId, String name, String description, String imageLogo, Set<UserEntity> users, List<SiteEntity> sites, int siteCount, boolean statusCompany) {
         this.CompanyId = CompanyId;
         this.name = name;
         this.description = description;
@@ -49,6 +52,7 @@ public class CompanyEntity {
         this.users = users;
         this.sites = sites;
         this.siteCount = siteCount;
+        this.statusCompany = statusCompany;
     }
 
     public UUID getCompanyId() {
@@ -117,5 +121,9 @@ public class CompanyEntity {
             site.setCompany(null); // Elimina la relación bidireccional
             siteCount = sites.size(); // Actualiza el recuento de sitios
         }
+    }
+
+    public void setStatusCompany(boolean statusCompany) {
+        this.statusCompany = statusCompany;
     }
 }
