@@ -11,17 +11,19 @@ public class AreaDTO {
     private LocalDateTime dateCreated;
 
     private UUID siteId;
+    private boolean statusArea;
 
     public AreaDTO() {
 
     }
 
-    public AreaDTO(UUID areaId, String name, String type, LocalDateTime dateCreated, UUID siteId) {
+    public AreaDTO(UUID areaId, String name, String type, LocalDateTime dateCreated, UUID siteId, boolean statusArea) {
         this.areaId = areaId;
         this.name = name;
         this.type = type;
         this.dateCreated = dateCreated;
         this.siteId = siteId;
+        this.statusArea = statusArea;
     }
 
     public UUID getAreaId() {
@@ -62,5 +64,13 @@ public class AreaDTO {
 
     public void setSiteId(UUID siteId) {
         this.siteId = siteId;
+    }
+
+    public boolean getStatusArea(){
+        return statusArea;
+    }
+
+    public void setStatusArea(boolean statusArea){
+        this.statusArea = statusArea;
     }
 }
