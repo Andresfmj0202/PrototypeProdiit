@@ -2,7 +2,6 @@ package com.Prodiit.Prototype.Services;
 
 import com.Prodiit.Prototype.Models.Dtos.AreaDTO;
 import com.Prodiit.Prototype.Models.Entitys.AreaEntity;
-import com.Prodiit.Prototype.Models.Entitys.CompanyEntity;
 import com.Prodiit.Prototype.Respositorys.AreaRepository;
 import com.Prodiit.Prototype.Respositorys.SiteRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -100,11 +99,11 @@ public class AreaService {
         areaRepository.deleteById(areaId);
     }
 
-    public AreaEntity updateStatus(UUID areaId) {
+    public AreaEntity updateStatusArea(UUID areaId) {
         AreaEntity areaEntity = areaRepository.findById(areaId)
                 .orElseThrow(() -> new EntityNotFoundException("Area no encontrada"));
 
-        areaEntity.setStatusArea(!areaEntity.getStatusArea());
+        areaEntity.setStatusArea(!areaEntity.isStatusArea());
         return areaRepository.save(areaEntity);
     }
 }

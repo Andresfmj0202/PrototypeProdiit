@@ -66,7 +66,7 @@ public class AreaDTO {
         this.siteId = siteId;
     }
 
-    public boolean getStatusArea(){
+    public boolean isStatusArea(){
         return statusArea;
     }
 

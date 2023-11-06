@@ -36,7 +36,7 @@ public class AreaController {
         areaEntity.setName(areaDTO.getName());
         areaEntity.setType(areaDTO.getType());
         areaEntity.setDateCreated(LocalDateTime.now());
-        areaEntity.setStatusArea(areaDTO.getStatusArea());
+        areaEntity.setStatusArea(true);
 
         UUID siteId = areaDTO.getSiteId();  // Obtiene el ID del sitio desde el DTO
 
@@ -57,7 +57,7 @@ public class AreaController {
                     areaEntity.getType(),
                     areaEntity.getDateCreated(),
                     siteId,  // Utiliza el mismo ID de sitio que se proporcionó
-                    areaEntity.getStatusArea()
+                    areaEntity.isStatusArea()
             );
         } else {
             // Maneja el caso en el que el sitio no existe
@@ -110,14 +110,14 @@ public class AreaController {
 
     // Cambiar el estado activo/inactivo de un area
     @PutMapping("/status/{id}")
-    public ResponseEntity<AreaDTO> updateStatus(@PathVariable UUID id) {
-        AreaEntity updatedAreaEntity = areaService.updateStatus(id);
+    public ResponseEntity<AreaDTO> updateStatusArea(@PathVariable UUID id) {
+        AreaEntity updatedAreaEntity = areaService.updateStatusArea(id);
 
         // Convierte la entidad actualizada a un DTO y devuélvelo en la respuesta
         AreaDTO updatedAreaDTO = new AreaDTO();
         updatedAreaDTO.setName(updatedAreaEntity.getName());
         updatedAreaDTO.setType(updatedAreaEntity.getType());
-        updatedAreaDTO.setStatusArea(updatedAreaEntity.getStatusArea());
+        updatedAreaDTO.setStatusArea(updatedAreaEntity.isStatusArea());
 
         return ResponseEntity.ok(updatedAreaDTO);
     }

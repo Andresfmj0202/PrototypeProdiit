@@ -45,7 +45,7 @@ public class FileService {
         return dto;
     }
 
-    public FileDTO createAndSaveFileWithPDAL(MultipartFile file, String pdalJson) {
+    /*public FileDTO createAndSaveFileWithPDAL(MultipartFile file, String pdalJson) {
         FileEntity entity = new FileEntity();
 
         try {
@@ -87,7 +87,7 @@ public class FileService {
         }catch (Exception e) {
             throw new PDALProcessingException("Error procesando el archivo con PDAL", e);
         }
-    }
+    }*/
 
     private PointView getFirstPointView(Pipeline pipeline) {
         PointViewIterator pointViewIterator = pipeline.getPointViews();

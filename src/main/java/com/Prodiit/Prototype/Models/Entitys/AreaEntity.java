@@ -43,14 +43,14 @@ public class AreaEntity {
 
     }
 
-    public AreaEntity(UUID areaId, String name, String type, LocalDateTime dateCreated, boolean statusArea, SiteEntity site, List<FileEntity> files) {
+    public AreaEntity(UUID areaId, String name, String type, LocalDateTime dateCreated, SiteEntity site, List<FileEntity> files, boolean statusArea) {
         this.areaId = areaId;
         this.name = name;
         this.Type = type;
         this.dateCreated = dateCreated;
-        this.statusArea = statusArea;
         this.site = site;
         this.files = files;
+        this.statusArea = statusArea;
     }
 
     public UUID getAreaId() {
@@ -85,14 +85,6 @@ public class AreaEntity {
         this.dateCreated = dateCreated;
     }
 
-    public boolean getStatusArea(){
-        return statusArea;
-    }
-
-    public void setStatusArea(boolean statusArea) {
-        this.statusArea = statusArea;
-    }
-
     public SiteEntity getSite() {
         return site;
     }
@@ -107,5 +99,9 @@ public class AreaEntity {
 
     public void setFiles(List<FileEntity> files) {
         this.files = files;
+    }
+
+    public void setStatusArea(boolean statusArea) {
+        this.statusArea = statusArea;
     }
 }

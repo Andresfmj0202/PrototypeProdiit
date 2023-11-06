@@ -122,7 +122,7 @@ public class SiteController {
                 areaEntity.getType(),
                 areaEntity.getDateCreated(),
                 areaEntity.getSite().getSiteId(),
-                areaEntity.getStatusArea()
+                areaEntity.isStatusArea()
         );
     }
 
