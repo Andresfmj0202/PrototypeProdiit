@@ -3,11 +3,11 @@ package com.Prodiit.Prototype.Controllers;
 import com.Prodiit.Prototype.Models.Dtos.AreaDTO;
 import com.Prodiit.Prototype.Models.Entitys.AreaEntity;
 import com.Prodiit.Prototype.Models.Entitys.SiteEntity;
-import com.Prodiit.Prototype.Respositorys.AreaRepository;
 import com.Prodiit.Prototype.Services.AreaService;
 import com.Prodiit.Prototype.Services.SiteService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -36,6 +36,7 @@ public class AreaController {
         areaEntity.setName(areaDTO.getName());
         areaEntity.setType(areaDTO.getType());
         areaEntity.setDateCreated(LocalDateTime.now());
+        areaEntity.setStatusArea(true);
 
         UUID siteId = areaDTO.getSiteId();  // Obtiene el ID del sitio desde el DTO
 
@@ -55,7 +56,8 @@ public class AreaController {
                     areaEntity.getName(),
                     areaEntity.getType(),
                     areaEntity.getDateCreated(),
-                    siteId  // Utiliza el mismo ID de sitio que se proporcionó
+                    siteId,  // Utiliza el mismo ID de sitio que se proporcionó
+                    areaEntity.isStatusArea()
             );
         } else {
             // Maneja el caso en el que el sitio no existe
@@ -106,4 +108,17 @@ public class AreaController {
         areaService.deleteAreaById(areaId);
     }
 
+    // Cambiar el estado activo/inactivo de un area
+    @PutMapping("/status/{id}")
+    public ResponseEntity<AreaDTO> updateStatusArea(@PathVariable UUID id) {
+        AreaEntity updatedAreaEntity = areaService.updateStatusArea(id);
+
+        // Convierte la entidad actualizada a un DTO y devuélvelo en la respuesta
+        AreaDTO updatedAreaDTO = new AreaDTO();
+        updatedAreaDTO.setName(updatedAreaEntity.getName());
+        updatedAreaDTO.setType(updatedAreaEntity.getType());
+        updatedAreaDTO.setStatusArea(updatedAreaEntity.isStatusArea());
+
+        return ResponseEntity.ok(updatedAreaDTO);
+    }
 }

@@ -17,8 +17,8 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @PostMapping("/processPointCloud")
+    /*@PostMapping("/processPointCloud")
     public FileDTO uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("pdalJson") String pdalJson) {
         return fileService.createAndSaveFileWithPDAL(file, pdalJson);
-    }
+    }*/
 }

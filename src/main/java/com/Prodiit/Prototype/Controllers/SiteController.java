@@ -121,7 +121,8 @@ public class SiteController {
                 areaEntity.getName(),
                 areaEntity.getType(),
                 areaEntity.getDateCreated(),
-                areaEntity.getSite().getSiteId()
+                areaEntity.getSite().getSiteId(),
+                areaEntity.isStatusArea()
         );
     }
 

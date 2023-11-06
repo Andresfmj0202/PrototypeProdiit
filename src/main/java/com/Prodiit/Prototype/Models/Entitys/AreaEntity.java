@@ -3,6 +3,7 @@ package com.Prodiit.Prototype.Models.Entitys;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,9 @@ public class AreaEntity {
     // Utiliza LocalDateTime para almacenar fecha y hora
     private LocalDateTime dateCreated;
 
+    @Getter
+    private boolean statusArea;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "site_id")
@@ -39,13 +43,14 @@ public class AreaEntity {
 
     }
 
-    public AreaEntity(UUID areaId, String name, String type, LocalDateTime dateCreated, SiteEntity site, List<FileEntity> files) {
+    public AreaEntity(UUID areaId, String name, String type, LocalDateTime dateCreated, SiteEntity site, List<FileEntity> files, boolean statusArea) {
         this.areaId = areaId;
         this.name = name;
         this.Type = type;
         this.dateCreated = dateCreated;
         this.site = site;
         this.files = files;
+        this.statusArea = statusArea;
     }
 
     public UUID getAreaId() {
@@ -94,5 +99,9 @@ public class AreaEntity {
 
     public void setFiles(List<FileEntity> files) {
         this.files = files;
+    }
+
+    public void setStatusArea(boolean statusArea) {
+        this.statusArea = statusArea;
     }
 }
