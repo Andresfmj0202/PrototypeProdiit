@@ -11,8 +11,12 @@ import io.pdal.pipeline.ReaderType;
 import io.pdal.pipeline.WriterType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -45,6 +49,22 @@ public class FileService {
         return dto;
     }
 
+
+    public String uploadFile(MultipartFile file){
+        try{
+            //Especifico la ruta donde va a guardar los archivos
+            //Ademas extrae el nombre del archivo que recibe y lo guarda en la ruta especificada
+            Path folder = Paths.get("src/main/resources/data_cloud_files/" + file.getOriginalFilename());
+            //Guarda el archivo en la ruta especificada
+            Files.write(folder, file.getBytes());
+            //Retorna un mensaje de exito
+            return "Archivo subido con éxito";
+        }catch (Exception e){
+            return "Error al subir el archivo" + e.getMessage();
+        }
+    }
+
+
     public FileDTO createAndSaveFileWithPDAL(MultipartFile file, String pdalJson) {
         FileEntity entity = new FileEntity();
 
@@ -53,14 +73,14 @@ public class FileService {
             Pipeline pipeline = new Pipeline(pdalJson, 8);
 
             // Agregar el lector LAS para procesar el archivo LAZ
-            PipelineManager manager = pipeline.getManager();
-            manager.addReader(ReaderType.LasReader);
+            //PipelineManager manager = pipeline.getManager();
+            //manager.addReader(ReaderType.LasReader);
 
             // Agregar el escritor
-            manager.addWriter(WriterType.LasWriter);
+            //manager.addWriter(WriterType.LasWriter);
 
             // Asignar el archivo LAZ al lector
-            manager.getStage("readers.las").addInputFile(file.getBytes());
+            //manager.getStage("readers.las").addInputFile(file.getBytes());
 
             // Validar la tubería
             pipeline.validate();
